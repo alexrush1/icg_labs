@@ -14,6 +14,7 @@ public class DrawPanel extends JPanel {
     Graphics2D canvasGraphics2D;
 
     BufferedImage image;
+    Frame preferencesFrame;
 
     int xPressed = -1;
     int yPressed = -1;
@@ -161,13 +162,17 @@ public class DrawPanel extends JPanel {
             public void mouseMoved(MouseEvent e) {
                 cursorX = e.getX();
                 cursorY = e.getY();
-                repaint();
+                if (mode == DrawTypes.STAMP) {
+                    repaint();
+                }
             }
         });
     }
 
     public void lines() {
-        Frame preferencesFrame = new JFrame("Preferences");
+        mode = DrawTypes.LINES;
+        if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
+        preferencesFrame = new JFrame("Preferences");
         preferencesFrame.setLayout(null);
         preferencesFrame.setSize(300, 120);
         preferencesFrame.setResizable(false);
@@ -190,11 +195,11 @@ public class DrawPanel extends JPanel {
         preferencesFrame.add(lineThickness, BorderLayout.AFTER_LAST_LINE);
         preferencesFrame.setLocationRelativeTo(null);
         preferencesFrame.setVisible(true);
-        mode = DrawTypes.LINES;
     }
 
     public void stamp() {
-        Frame preferencesFrame = new JFrame("Preferences");
+        if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
+        preferencesFrame = new JFrame("Preferences");
         preferencesFrame.setLayout(null);
         preferencesFrame.setSize(300, 200);
         preferencesFrame.setResizable(false);
