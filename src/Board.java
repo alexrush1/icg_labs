@@ -30,38 +30,46 @@ public class Board {
         JToolBar toolsBar = new JToolBar();
 
         cursorButton = new JRadioButton();
-        ImageIcon cursorIco = new ImageIcon("C:\\Users\\Иван\\IdeaProjects\\untitled\\src\\resources\\cursor.jpg");
+        ImageIcon cursorIco = new ImageIcon("./src/resources/cursor.jpg");
         cursorButton.setSize(15, 15);
         cursorButton.setIcon(cursorIco);
 
-        cursorButton.setPressedIcon(new ImageIcon("C:\\Users\\Иван\\IdeaProjects\\untitled\\src\\resources\\cursor_pressed.jpg"));
+        cursorButton.setPressedIcon(new ImageIcon("./src/resources/cursor_pressed.jpg"));
         //cursorButton.setRolloverIcon(new ImageIcon("C:\\Users\\Иван\\IdeaProjects\\untitled\\src\\resources\\cursor_pressed.jpg"));
         //cursorButton.setDefaultCapable();
         cursorButton.addActionListener(this::cursor);
 
 
         JRadioButton linesButton = new JRadioButton();
-        ImageIcon linesIco = new ImageIcon("C:\\Users\\Иван\\IdeaProjects\\untitled\\src\\resources\\lines.jpg");
+        ImageIcon linesIco = new ImageIcon("./src/resources/lines.jpg");
         linesButton.setSize(15, 15);
         linesButton.setIcon(linesIco);
         linesButton.addActionListener(this::lines);
 
 
         JRadioButton stampButton = new JRadioButton();
-        ImageIcon stampIco = new ImageIcon("C:\\Users\\Иван\\IdeaProjects\\untitled\\src\\resources\\stamp.jpg");
+        ImageIcon stampIco = new ImageIcon("./src/resources/stamp.jpg");
         stampButton.setSize(15, 15);
         stampButton.setIcon(stampIco);
         stampButton.addActionListener(this::stamp);
+
+        JRadioButton colorChooser = new JRadioButton();
+        ImageIcon colorChooserIco = new ImageIcon("./src/resources/picker.jpg");
+        colorChooser.setSize(15,15);
+        colorChooser.setIcon(colorChooserIco);
+        colorChooser.addActionListener(this::colorChooser);
 
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(cursorButton);
         buttonGroup.add(linesButton);
         buttonGroup.add(stampButton);
+        buttonGroup.add(colorChooser);
 
         toolsBar.add(cursorButton);
         toolsBar.add(linesButton);
         toolsBar.add(stampButton);
+        toolsBar.add(colorChooser);
 
 //        toolsBar.setBounds(0,20,640, 33);
         drawPanel.add(toolsBar, BorderLayout.NORTH);
@@ -142,5 +150,7 @@ public class Board {
     private void cursor(ActionEvent e) { drawPanel.cursor(); }
 
     private void stamp(ActionEvent e) { drawPanel.stamp(); }
+
+    private void colorChooser(ActionEvent e) { drawPanel.colorChooser(); }
 
 }

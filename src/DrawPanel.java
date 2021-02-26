@@ -2,10 +2,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 public class DrawPanel extends JPanel {
@@ -27,6 +24,7 @@ public class DrawPanel extends JPanel {
     int thickness = 1;
     int corners = 3;
     int stampRadius = 50;
+    Color color = Color.BLACK;
 
     private DrawTypes mode = DrawTypes.CURSOR;
 
@@ -37,7 +35,7 @@ public class DrawPanel extends JPanel {
         imageGraphics2D.setBackground(Color.white);
         imageGraphics2D.clearRect(0, 0, 500, 500);
 
-        imageGraphics2D.setColor(Color.BLACK);
+        imageGraphics2D.setColor(color);
 
         setFocusable(true);
         createMouseListener();
@@ -56,7 +54,7 @@ public class DrawPanel extends JPanel {
 
         if(mode == DrawTypes.LINES) {
             canvasGraphics2D.setStroke(new BasicStroke(thickness));
-            canvasGraphics2D.setColor(Color.BLACK);
+            canvasGraphics2D.setColor(color);
             canvasGraphics2D.drawLine(xPressed, yPressed, cursorX, cursorY);
         } else if (mode == DrawTypes.STAMP) {
             int x[] = new int [corners];
@@ -75,7 +73,7 @@ public class DrawPanel extends JPanel {
             }
             int x1, x2, y1, y2;
             int j = corners-1;
-            canvasGraphics2D.setColor(Color.BLACK);
+            canvasGraphics2D.setColor(color);
             canvasGraphics2D.setStroke(new BasicStroke(thickness));
             while(j >= 0){
                 if(j > 0){
@@ -108,6 +106,7 @@ public class DrawPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 if (mode == DrawTypes.LINES) {
+                    imageGraphics2D.setColor(color);
                     imageGraphics2D.drawLine(xPressed, yPressed, e.getX(), e.getY());
                     repaint();
                 } else if (mode == DrawTypes.STAMP) {
@@ -127,6 +126,7 @@ public class DrawPanel extends JPanel {
                     }
                     int x1, x2, y1, y2;
                     int j = corners-1;
+                    imageGraphics2D.setColor(color);
                     imageGraphics2D.setStroke(new BasicStroke(thickness));
                     while(j >= 0){
                         if(j > 0){
@@ -268,5 +268,22 @@ public class DrawPanel extends JPanel {
 
     public void cursor() {
         mode = DrawTypes.CURSOR;
+    }
+
+    public void colorChooser() {
+        Frame colorChooserFrame = new Frame();
+        JColorChooser colorChooser = new JColorChooser();
+        JButton chooseButton = new JButton("Choose color");
+        colorChooserFrame.add(colorChooser, BorderLayout.CENTER);
+        colorChooserFrame.add(chooseButton, BorderLayout.SOUTH);
+        colorChooserFrame.setVisible(true);
+
+        chooseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                color = colorChooser.getColor();
+            }
+        });
+
     }
 }
