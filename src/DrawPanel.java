@@ -68,8 +68,8 @@ public class DrawPanel extends JPanel {
             while(i < corners){
                 a = Math.cos( z/180*Math.PI);
                 b = Math.sin( z/180*Math.PI);
-                x[i] = cursorX + (int)(Math.round(a) * R);
-                y[i] = cursorY - (int)(Math.round(b) * R);
+                x[i] = cursorX + (int)(a * R);
+                y[i] = cursorY - (int)(b * R);
                 z = z + angle;
                 i++;
             }
@@ -120,8 +120,8 @@ public class DrawPanel extends JPanel {
                     while(i < corners){
                         a = Math.cos( z/180*Math.PI);
                         b = Math.sin( z/180*Math.PI);
-                        x[i] = xPressed + (int)(Math.round(a) * R);
-                        y[i] = yPressed - (int)(Math.round(b) * R);
+                        x[i] = xPressed + (int)(a * R);
+                        y[i] = yPressed - (int)(b * R);
                         z = z + angle;
                         i++;
                     }
