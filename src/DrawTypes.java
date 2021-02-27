@@ -1,5 +1,6 @@
 public enum DrawTypes {
     CURSOR,
     LINES,
-    STAMP
+    STAMP,
+    STAR_STAMP
 }

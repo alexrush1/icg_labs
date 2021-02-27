@@ -64,8 +64,8 @@ public class DrawPanel extends JPanel {
             double angle = 360.0 / corners;
             double R = stampRadius;
             while(i < corners){
-                a = Math.cos( z/180*Math.PI);
                 b = Math.sin( z/180*Math.PI);
+                a = Math.cos( z/180*Math.PI);
                 x[i] = cursorX + (int)(a * R);
                 y[i] = cursorY - (int)(b * R);
                 z = z + angle;
@@ -87,6 +87,51 @@ public class DrawPanel extends JPanel {
                     y1 = y[j]; y2 = y[corners-1];
                     canvasGraphics2D.drawLine(x1, y1, x2, y2);
                     j--;
+                }
+            }
+        } else if (mode == DrawTypes.STAR_STAMP) {
+            int x1[] = new int [corners];
+            int y1[] = new int [corners];
+            int x2[] = new int [corners];
+            int y2[] = new int [corners];
+            double a1, b1, a2, b2, z = 0;
+            int i = 0;
+            double angle = 360.0 / corners;
+            double R = stampRadius;
+            double r = stampRadius / 3;
+            while(i < corners){
+                a1 = Math.cos( z/180 * Math.PI);
+                b1 = Math.sin( z/180 * Math.PI);
+                a2 = Math.cos( (z + (360 / (2 * corners)))/180 * Math.PI);
+                b2 = Math.sin( (z + (360 / (2 * corners)))/180 * Math.PI);
+                x1[i] = cursorX + (int)(a1 * R);
+                y1[i] = cursorY - (int)(b1 * R);
+                x2[i] = cursorX + (int)(a2 * r);
+                y2[i] = cursorY - (int)(b2 * r);
+                z = z + angle;
+                i++;
+            }
+            int x11, x22, y11, y22, x33, y33;
+            int j = corners-1;
+            canvasGraphics2D.setColor(color);
+            canvasGraphics2D.setStroke(new BasicStroke(thickness));
+            int k = 0;
+            while(j >= 0){
+                if((j >= 1) && (k < corners - 1)){
+                    x11 = x1[j]; x22 = x2[j]; x33 = x2[j-1];
+                    y11 = y1[j]; y22 = y2[j]; y33 = y2[j-1];
+                    canvasGraphics2D.drawLine(x11, y11, x22, y22);
+                    canvasGraphics2D.drawLine(x11, y11, x33, y33);
+                    j--;
+                    k++;
+                }
+                else{
+                    x11 = x1[j]; x22 = x2[corners-1]; x33 = x2[0];
+                    y11 = y1[j]; y22 = y2[corners-1]; y33 = y2[0];
+                    canvasGraphics2D.drawLine(x11, y11, x22, y22);
+                    canvasGraphics2D.drawLine(x11, y11, x33, y33);
+                    j--;
+                    k++;
                 }
             }
         }
@@ -117,8 +162,8 @@ public class DrawPanel extends JPanel {
                     double angle = 360.0 / corners;
                     double R = stampRadius;
                     while(i < corners){
-                        a = Math.cos( z/180*Math.PI);
-                        b = Math.sin( z/180*Math.PI);
+                        a = Math.cos(z / 180 * Math.PI);
+                        b = Math.sin(z / 180 * Math.PI);
                         x[i] = xPressed + (int)(a * R);
                         y[i] = yPressed - (int)(b * R);
                         z = z + angle;
@@ -143,6 +188,52 @@ public class DrawPanel extends JPanel {
                         }
                     }
                     repaint();
+                } else if (mode == DrawTypes.STAR_STAMP) {
+                    int x1[] = new int [corners];
+                    int y1[] = new int [corners];
+                    int x2[] = new int [corners];
+                    int y2[] = new int [corners];
+                    double a1, b1, a2, b2, z = 0;
+                    int i = 0;
+                    double angle = 360.0 / corners;
+                    double R = stampRadius;
+                    double r = stampRadius / 3;
+                    while(i < corners){
+                        a1 = Math.cos( z/180 * Math.PI);
+                        b1 = Math.sin( z/180 * Math.PI);
+                        a2 = Math.cos( (z + (360 / (2 * corners)))/180 * Math.PI);
+                        b2 = Math.sin( (z + (360 / (2 * corners)))/180 * Math.PI);
+                        x1[i] = xPressed + (int)(a1 * R);
+                        y1[i] = yPressed - (int)(b1 * R);
+                        x2[i] = xPressed + (int)(a2 * r);
+                        y2[i] = yPressed - (int)(b2 * r);
+                        z = z + angle;
+                        i++;
+                    }
+                    int x11, x22, y11, y22, x33, y33;
+                    int j = corners-1;
+                    imageGraphics2D.setColor(color);
+                    imageGraphics2D.setStroke(new BasicStroke(thickness));
+                    int k = 0;
+                    while(j >= 0){
+                        if((j >= 1) && (k < corners - 1)){
+                            x11 = x1[j]; x22 = x2[j]; x33 = x2[j-1];
+                            y11 = y1[j]; y22 = y2[j]; y33 = y2[j-1];
+                            imageGraphics2D.drawLine(x11, y11, x22, y22);
+                            imageGraphics2D.drawLine(x11, y11, x33, y33);
+                            j--;
+                            k++;
+                        }
+                        else{
+                            x11 = x1[j]; x22 = x2[corners-1]; x33 = x2[0];
+                            y11 = y1[j]; y22 = y2[corners-1]; y33 = y2[0];
+                            imageGraphics2D.drawLine(x11, y11, x22, y22);
+                            imageGraphics2D.drawLine(x11, y11, x33, y33);
+                            j--;
+                            k++;
+                        }
+                    }
+                    repaint();
                 }
                 pressed = false;
             }
@@ -162,7 +253,7 @@ public class DrawPanel extends JPanel {
             public void mouseMoved(MouseEvent e) {
                 cursorX = e.getX();
                 cursorY = e.getY();
-                if (mode == DrawTypes.STAMP) {
+                if ((mode == DrawTypes.STAMP) || (mode == DrawTypes.STAR_STAMP)) {
                     repaint();
                 }
             }
@@ -271,7 +362,8 @@ public class DrawPanel extends JPanel {
     }
 
     public void colorChooser() {
-        Frame colorChooserFrame = new Frame();
+        JFrame colorChooserFrame = new JFrame("Color chooser");
+        colorChooserFrame.setSize(600, 400);
         JColorChooser colorChooser = new JColorChooser();
         JButton chooseButton = new JButton("Choose color");
         colorChooserFrame.add(colorChooser, BorderLayout.CENTER);
@@ -285,5 +377,17 @@ public class DrawPanel extends JPanel {
             }
         });
 
+    }
+
+    public void starStamp() {
+        stamp();
+        mode = DrawTypes.STAR_STAMP;
+    }
+
+    public void clearPanel() {
+        if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
+        mode = DrawTypes.CURSOR;
+        imageGraphics2D.clearRect(0, 0, 500, 500);
+        repaint();
     }
 }

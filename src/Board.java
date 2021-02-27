@@ -1,5 +1,3 @@
-import Utilites.BoxLayoutUtilites;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -53,11 +51,22 @@ public class Board {
         stampButton.setIcon(stampIco);
         stampButton.addActionListener(this::stamp);
 
+        JRadioButton starStampButton = new JRadioButton();
+        ImageIcon starStampIco = new ImageIcon("./src/resources/starStamp.jpg");
+        starStampButton.setSize(15, 15);
+        starStampButton.setIcon(starStampIco);
+        starStampButton.addActionListener(this::starStamp);
+
         JRadioButton colorChooser = new JRadioButton();
         ImageIcon colorChooserIco = new ImageIcon("./src/resources/picker.jpg");
         colorChooser.setSize(15,15);
         colorChooser.setIcon(colorChooserIco);
         colorChooser.addActionListener(this::colorChooser);
+
+        JRadioButton clearButton = new JRadioButton();
+        ImageIcon clearButtonIcon = new ImageIcon("./src/resources/clear.jpg");
+        clearButton.setIcon(clearButtonIcon);
+        clearButton.addActionListener(this::clear);
 
 
         ButtonGroup buttonGroup = new ButtonGroup();
@@ -65,11 +74,15 @@ public class Board {
         buttonGroup.add(linesButton);
         buttonGroup.add(stampButton);
         buttonGroup.add(colorChooser);
+        buttonGroup.add(starStampButton);
+        buttonGroup.add(clearButton);
 
         toolsBar.add(cursorButton);
         toolsBar.add(linesButton);
         toolsBar.add(stampButton);
+        toolsBar.add(starStampButton);
         toolsBar.add(colorChooser);
+        toolsBar.add(clearButton);
 
 //        toolsBar.setBounds(0,20,640, 33);
         drawPanel.add(toolsBar, BorderLayout.NORTH);
@@ -151,6 +164,10 @@ public class Board {
 
     private void stamp(ActionEvent e) { drawPanel.stamp(); }
 
+    private void starStamp(ActionEvent e) { drawPanel.starStamp(); }
+
     private void colorChooser(ActionEvent e) { drawPanel.colorChooser(); }
+
+    private void clear(ActionEvent e) { drawPanel.clearPanel(); }
 
 }
