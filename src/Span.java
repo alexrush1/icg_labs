@@ -57,7 +57,7 @@ public class Span {
     public void scan(int lx, int rx, int y) {
         var added = false;
         for (int i = lx; i < rx; i++) {
-            if (image.getRGB(i, y) != newColorRGB && (image.getRGB(i, y) != startPixel)) {
+            if ((image.getRGB(i, y) != newColorRGB && (image.getRGB(i, y) != startPixel)) ||(image.getRGB(i, y) == newColorRGB && (image.getRGB(i, y) != startPixel))) {
                 added = false;
             } else if (!added) {
                 queue.push(new Pair<>(i, y));

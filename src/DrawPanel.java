@@ -58,7 +58,11 @@ public class DrawPanel extends JPanel {
         if(mode == DrawTypes.LINES) {
             canvasGraphics2D.setStroke(new BasicStroke(thickness));
             canvasGraphics2D.setColor(color);
-            canvasGraphics2D.drawLine(xPressed, yPressed, cursorX, cursorY);
+            if (thickness > 1) {
+                canvasGraphics2D.drawLine(xPressed, yPressed, cursorX, cursorY);
+            } else if (thickness == 1) {
+                BrezLine.line(canvasGraphics2D, color, xPressed, yPressed, cursorX, cursorY);
+            }
         } else if (mode == DrawTypes.STAMP) {
             int x[] = new int [corners];
             int y[] = new int [corners];
@@ -155,7 +159,11 @@ public class DrawPanel extends JPanel {
                 super.mouseReleased(e);
                 if (mode == DrawTypes.LINES) {
                     imageGraphics2D.setColor(color);
-                    imageGraphics2D.drawLine(xPressed, yPressed, e.getX(), e.getY());
+                    if (thickness > 1) {
+                        imageGraphics2D.drawLine(xPressed, yPressed, e.getX(), e.getY());
+                    } else if (thickness == 1) {
+                        BrezLine.line(imageGraphics2D, color, xPressed, yPressed, e.getX(), e.getY());
+                    }
                     repaint();
                 } else if (mode == DrawTypes.STAMP) {
                     int x[] = new int [corners];
