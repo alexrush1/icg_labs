@@ -16,7 +16,7 @@ public class Board {
         //JPanel panel = new JPanel();
         //panel.setForeground(Color.WHITE);
 
-        BufferedImage pane = new BufferedImage(620, 460, BufferedImage.TYPE_INT_RGB);
+        BufferedImage pane = new BufferedImage(620, 460, BufferedImage.TYPE_INT_ARGB);
         Graphics g = pane.getGraphics();
         drawPanel = new DrawPanel();
         drawPanel.setSize(640, 480);
@@ -68,24 +68,32 @@ public class Board {
         clearButton.setIcon(clearButtonIcon);
         clearButton.addActionListener(this::clear);
 
+        JRadioButton fillButton = new JRadioButton();
+        ImageIcon fillButtonIcon = new ImageIcon("./src/resources/fill.jpg");
+        fillButton.setIcon(fillButtonIcon);
+        fillButton.addActionListener(this::fill);
+
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(cursorButton);
         buttonGroup.add(linesButton);
         buttonGroup.add(stampButton);
-        buttonGroup.add(colorChooser);
         buttonGroup.add(starStampButton);
+        buttonGroup.add(fillButton);
+        buttonGroup.add(colorChooser);
         buttonGroup.add(clearButton);
 
         toolsBar.add(cursorButton);
         toolsBar.add(linesButton);
         toolsBar.add(stampButton);
         toolsBar.add(starStampButton);
+        toolsBar.add(fillButton);
         toolsBar.add(colorChooser);
         toolsBar.add(clearButton);
 
 //        toolsBar.setBounds(0,20,640, 33);
-        drawPanel.add(toolsBar, BorderLayout.NORTH);
+        toolsBar.setOrientation(1);
+        drawPanel.add(toolsBar, BorderLayout.EAST);
         //drawPanel.setBackground(Color.white);
 
         //drawPanel.add(menuBar, BorderLayout.NORTH);
@@ -98,51 +106,54 @@ public class Board {
     }
 
     private JMenu createFileMenu() {
-        JMenu file = new JMenu("Файл");
-        JMenuItem open = new JMenuItem("Открыть",
-                new ImageIcon("images/open.png"));
+        JMenu file = new JMenu("File");
+        //JMenuItem open = new JMenuItem("Открыть", new ImageIcon("images/open.png"));
         JMenuItem exit = new JMenuItem(new ExitAction());
-        // Добавление к пункту меню изображения
-        exit.setIcon(new ImageIcon("images/exit.png"));
-        // Добавим в меню пункта open
-        file.add(open);
+
+        //file.add(open);
         // Добавление разделителя
         file.addSeparator();
         file.add(exit);
 
-        open.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println ("ActionListener.actionPerformed : open");
-            }
-        });
+//        open.addActionListener(new ActionListener()
+//        {
+//            @Override
+//            public void actionPerformed(ActionEvent arg0) {
+//                System.out.println ("ActionListener.actionPerformed : open");
+//            }
+//        });
         return file;
     }
 
     private JMenu createViewMenu()
     {
         // создадим выпадающее меню
-        JMenu viewMenu = new JMenu("Вид");
+        JMenu viewMenu = new JMenu("Tools");
+        JMenuItem resize = new JMenuItem("Resize");
+
+        resize.addActionListener(this::resize);
+
+        viewMenu.addSeparator();
+        viewMenu.add(resize);
         // меню-флажки
-        JCheckBoxMenuItem line  = new JCheckBoxMenuItem("Линейка");
-        JCheckBoxMenuItem grid  = new JCheckBoxMenuItem("Сетка");
-        JCheckBoxMenuItem navig = new JCheckBoxMenuItem("Навигация");
-        // меню-переключатели
-        JRadioButtonMenuItem one = new JRadioButtonMenuItem("Одна страница");
-        JRadioButtonMenuItem two = new JRadioButtonMenuItem("Две страницы");
-        // организуем переключатели в логическую группу
-        ButtonGroup bg = new ButtonGroup();
-        bg.add(one);
-        bg.add(two);
-        // добавим все в меню
-        viewMenu.add(line);
-        viewMenu.add(grid);
-        viewMenu.add(navig);
-        // разделитель можно создать и явно
-        viewMenu.add( new JSeparator());
-        viewMenu.add(one);
-        viewMenu.add(two);
+//        JCheckBoxMenuItem line  = new JCheckBoxMenuItem("Линейка");
+//        JCheckBoxMenuItem grid  = new JCheckBoxMenuItem("Сетка");
+//        JCheckBoxMenuItem navig = new JCheckBoxMenuItem("Навигация");
+//        // меню-переключатели
+//        JRadioButtonMenuItem one = new JRadioButtonMenuItem("Одна страница");
+//        JRadioButtonMenuItem two = new JRadioButtonMenuItem("Две страницы");
+//        // организуем переключатели в логическую группу
+//        ButtonGroup bg = new ButtonGroup();
+//        bg.add(one);
+//        bg.add(two);
+//        // добавим все в меню
+//        viewMenu.add(line);
+//        viewMenu.add(grid);
+//        viewMenu.add(navig);
+//        // разделитель можно создать и явно
+//        viewMenu.add( new JSeparator());
+//        viewMenu.add(one);
+//        viewMenu.add(two);
         return viewMenu;
     }
 
@@ -169,5 +180,9 @@ public class Board {
     private void colorChooser(ActionEvent e) { drawPanel.colorChooser(); }
 
     private void clear(ActionEvent e) { drawPanel.clearPanel(); }
+
+    private void fill(ActionEvent e) { drawPanel.fill(); }
+
+    private void resize(ActionEvent e) { drawPanel.reSize(); }
 
 }

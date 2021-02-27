@@ -19,6 +19,9 @@ public class DrawPanel extends JPanel {
     int cursorX = -1;
     int cursorY = -1;
 
+    int xSize = 500;
+    int ySize = 500;
+
     boolean pressed = false;
 
     int thickness = 1;
@@ -30,10 +33,10 @@ public class DrawPanel extends JPanel {
 
     public DrawPanel() {
         setLayout(new BorderLayout());
-        image = new BufferedImage(500, 500, BufferedImage.TYPE_3BYTE_BGR);
+        image = new BufferedImage(xSize, ySize, BufferedImage.TYPE_3BYTE_BGR);
         imageGraphics2D = (Graphics2D) image.getGraphics();
         imageGraphics2D.setBackground(Color.white);
-        imageGraphics2D.clearRect(0, 0, 500, 500);
+        imageGraphics2D.clearRect(0, 0, xSize, ySize);
 
         imageGraphics2D.setColor(color);
 
@@ -234,6 +237,10 @@ public class DrawPanel extends JPanel {
                         }
                     }
                     repaint();
+                } else if (mode == DrawTypes.SPAN) {
+                    Span span = new Span(image, color, xSize, ySize);
+                    span.spanFill(xPressed, yPressed);
+                    repaint();
                 }
                 pressed = false;
             }
@@ -284,7 +291,6 @@ public class DrawPanel extends JPanel {
         preferencesFrame.add(currentThickness);
         preferencesFrame.add(lineThicknessLabel);
         preferencesFrame.add(lineThickness, BorderLayout.AFTER_LAST_LINE);
-        preferencesFrame.setLocationRelativeTo(null);
         preferencesFrame.setVisible(true);
     }
 
@@ -350,9 +356,6 @@ public class DrawPanel extends JPanel {
         preferencesFrame.add(stampRadiusLabel);
         preferencesFrame.add(stampRadiusSlider);
 
-        preferencesFrame.setLocationRelativeTo(null);
-
-
         preferencesFrame.setVisible(true);
         mode = DrawTypes.STAMP;
     }
@@ -387,7 +390,63 @@ public class DrawPanel extends JPanel {
     public void clearPanel() {
         if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
         mode = DrawTypes.CURSOR;
-        imageGraphics2D.clearRect(0, 0, 500, 500);
+        imageGraphics2D.clearRect(0, 0, xSize, ySize);
         repaint();
+    }
+
+    public void fill() {
+        if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
+        mode = DrawTypes.SPAN;
+    }
+
+    public void reSize() {
+        if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
+        mode = DrawTypes.CURSOR;
+        preferencesFrame = new JFrame("Preferences");
+        preferencesFrame.setLayout(null);
+        preferencesFrame.setSize(200, 140);
+        //preferencesFrame.setResizable(false);
+
+        JLabel xFieldLabel = new JLabel("New size:");
+        xFieldLabel.setBounds(70, 10, 100, 20);
+        JTextField xField = new JTextField(4);
+        xField.setBounds(35, 35, 50, 20);
+
+        JLabel yFieldLabel = new JLabel("x");
+        yFieldLabel.setBounds(95, 35, 10, 10);
+        JTextField yField = new JTextField(4);
+        yField.setBounds(110, 35, 50, 20);
+
+        JButton change = new JButton("Resize");
+        change.setBounds(55, 65, 80, 30);
+
+        change.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                xSize = Integer.parseInt(xField.getText());
+                ySize = Integer.parseInt(yField.getText());
+
+                var oldImage = image;
+                image = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_ARGB);
+
+                imageGraphics2D = image.createGraphics();
+                imageGraphics2D.setBackground(Color.white);
+                imageGraphics2D.clearRect(0, 0, xSize, ySize);
+                imageGraphics2D.drawImage(oldImage, 0, 0, null);
+                imageGraphics2D.dispose();
+                repaint();
+            }
+        });
+
+        preferencesFrame.add(xFieldLabel);
+        preferencesFrame.add(xField);
+        preferencesFrame.add(yFieldLabel);
+        preferencesFrame.add(yField);
+        preferencesFrame.add(change);
+
+        preferencesFrame.setVisible(true);
+
+
     }
 }
