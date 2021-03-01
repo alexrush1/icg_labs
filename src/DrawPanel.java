@@ -1,9 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class DrawPanel extends JPanel {
 
@@ -61,7 +64,9 @@ public class DrawPanel extends JPanel {
             if (thickness > 1) {
                 canvasGraphics2D.drawLine(xPressed, yPressed, cursorX, cursorY);
             } else if (thickness == 1) {
-                BrezLine.line(canvasGraphics2D, color, xPressed, yPressed, cursorX, cursorY);
+                var brezX = cursorX;
+                var brezY = cursorY;
+                BrezLine.line(canvasGraphics2D, color, xPressed, yPressed, brezX, brezY);
             }
         } else if (mode == DrawTypes.STAMP) {
             int x[] = new int [corners];
@@ -157,12 +162,16 @@ public class DrawPanel extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
+                var mouseX = e.getX();
+                var mouseY = e.getY();
                 if (mode == DrawTypes.LINES) {
                     imageGraphics2D.setColor(color);
                     if (thickness > 1) {
-                        imageGraphics2D.drawLine(xPressed, yPressed, e.getX(), e.getY());
+                        imageGraphics2D.drawLine(xPressed, yPressed, mouseX, mouseY);
                     } else if (thickness == 1) {
-                        BrezLine.line(imageGraphics2D, color, xPressed, yPressed, e.getX(), e.getY());
+                        var brezX = mouseX;
+                        var brezY = mouseY;
+                        BrezLine.line(imageGraphics2D, color, xPressed, yPressed, brezX, brezY);
                     }
                     repaint();
                 } else if (mode == DrawTypes.STAMP) {
@@ -279,6 +288,7 @@ public class DrawPanel extends JPanel {
         mode = DrawTypes.LINES;
         if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
         preferencesFrame = new JFrame("Preferences");
+        preferencesFrame.setLocation(1600, 600);
         preferencesFrame.setLayout(null);
         preferencesFrame.setSize(300, 120);
         preferencesFrame.setResizable(false);
@@ -288,7 +298,23 @@ public class DrawPanel extends JPanel {
         lineThicknessLabel.setBounds(15, 15, 100, 20);
         lineThickness.setBounds(80, 17, 160, 20);
 
-        JLabel currentThickness = new JLabel(String.valueOf(thickness));
+        JTextField currentThickness = new JTextField(String.valueOf(thickness));
+
+        currentThickness.addActionListener(e -> {
+            if (Character.isLetter(currentThickness.getText().charAt(0))) {
+                JOptionPane.showMessageDialog(preferencesFrame, "Letters are NOT NUMBERS!!!");
+                currentThickness.setText(String.valueOf(thickness));
+                return;
+            }
+            var newValue = Integer.parseInt(currentThickness.getText());
+            if (newValue > 0 && newValue <= 15) {
+                thickness = newValue;
+                lineThickness.setValue(thickness);
+                imageGraphics2D.setStroke(new BasicStroke(thickness));
+            } else {
+                JOptionPane.showMessageDialog(preferencesFrame, "Thickness only >0 && <=15");
+            }
+        });
 
         lineThickness.addChangeListener(e -> {
             thickness = ((JSlider)e.getSource()).getValue();
@@ -305,6 +331,7 @@ public class DrawPanel extends JPanel {
     public void stamp() {
         if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
         preferencesFrame = new JFrame("Preferences");
+        preferencesFrame.setLocation(1600, 600);
         preferencesFrame.setLayout(null);
         preferencesFrame.setSize(300, 200);
         preferencesFrame.setResizable(false);
@@ -320,15 +347,62 @@ public class DrawPanel extends JPanel {
         cornersCountLabel.setBounds(15, 65, 100, 20);
         cornersCount.setBounds(80, 67, 160, 20);
 
-        JLabel currentThickness = new JLabel(String.valueOf(thickness));
-        JLabel currentCorners = new JLabel(String.valueOf(corners));
-        JLabel currentRadius = new JLabel(String.valueOf(stampRadius));
+        JTextField currentThickness = new JTextField(String.valueOf(thickness));
+        JTextField currentCorners = new JTextField(String.valueOf(corners));
+        JTextField currentRadius = new JTextField(String.valueOf(stampRadius));
+
+        currentThickness.addActionListener(e -> {
+            if (Character.isLetter(currentThickness.getText().charAt(0))) {
+                JOptionPane.showMessageDialog(preferencesFrame, "Letters are NOT NUMBERS!!!");
+                currentThickness.setText(String.valueOf(thickness));
+                return;
+            }
+            var newValue = Integer.parseInt(currentThickness.getText());
+            if (newValue > 0 && newValue <= 15) {
+                thickness = newValue;
+                lineThickness.setValue(thickness);
+                imageGraphics2D.setStroke(new BasicStroke(thickness));
+            } else {
+                JOptionPane.showMessageDialog(preferencesFrame, "Thickness only >0 && <=15");
+            }
+        });
+
+        currentCorners.addActionListener(e -> {
+            if (Character.isLetter(currentCorners.getText().charAt(0))) {
+                JOptionPane.showMessageDialog(preferencesFrame, "Letters are NOT NUMBERS!!!");
+                currentCorners.setText(String.valueOf(corners));
+                return;
+            }
+            var newValue = Integer.parseInt(currentCorners.getText());
+            if (newValue > 0 && newValue <= 10) {
+                corners = newValue;
+                cornersCount.setValue(corners);
+            } else {
+                JOptionPane.showMessageDialog(preferencesFrame, "Corners only >0 && <=10");
+            }
+        });
+
 
         JSlider stampRadiusSlider = new JSlider(50, 500);
         stampRadiusSlider.setValue(stampRadius);
         JLabel stampRadiusLabel = new JLabel("Radius");
         stampRadiusLabel.setBounds(15, 115, 100, 20);
         stampRadiusSlider.setBounds(80, 117, 160, 20);
+
+        currentRadius.addActionListener(e -> {
+            if (Character.isLetter(currentRadius.getText().charAt(0))) {
+                JOptionPane.showMessageDialog(preferencesFrame, "Letters are NOT NUMBERS!!!");
+                currentRadius.setText(String.valueOf(stampRadius));
+                return;
+            }
+            var newValue = Integer.parseInt(currentRadius.getText());
+            if (newValue > 50 && newValue <= 500 ) {
+                stampRadius = newValue;
+                stampRadiusSlider.setValue(stampRadius);
+            } else {
+                JOptionPane.showMessageDialog(preferencesFrame, "Radius only >50 && <=500");
+            }
+        });
 
         lineThickness.addChangeListener(e -> {
             thickness = ((JSlider)e.getSource()).getValue();
@@ -339,7 +413,6 @@ public class DrawPanel extends JPanel {
         cornersCount.addChangeListener(e -> {
             corners = ((JSlider)e.getSource()).getValue();
             currentCorners.setText(String.valueOf(corners));
-            imageGraphics2D.setStroke(new BasicStroke(corners));
         });
 
         stampRadiusSlider.addChangeListener(e -> {
@@ -369,11 +442,14 @@ public class DrawPanel extends JPanel {
     }
 
     public void cursor() {
+        if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
         mode = DrawTypes.CURSOR;
+        repaint();
     }
 
     public void colorChooser() {
         JFrame colorChooserFrame = new JFrame("Color chooser");
+        colorChooserFrame.setLocation(1600, 500);
         colorChooserFrame.setSize(600, 400);
         JColorChooser colorChooser = new JColorChooser();
         JButton chooseButton = new JButton("Choose color");
@@ -411,6 +487,7 @@ public class DrawPanel extends JPanel {
         if (preferencesFrame != null) {preferencesFrame.setVisible(false);}
         mode = DrawTypes.CURSOR;
         preferencesFrame = new JFrame("Preferences");
+        preferencesFrame.setLocation(1600, 600);
         preferencesFrame.setLayout(null);
         preferencesFrame.setSize(200, 140);
         //preferencesFrame.setResizable(false);
@@ -428,22 +505,16 @@ public class DrawPanel extends JPanel {
         JButton change = new JButton("Resize");
         change.setBounds(55, 65, 80, 30);
 
+
+
         change.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
                 xSize = Integer.parseInt(xField.getText());
                 ySize = Integer.parseInt(yField.getText());
+                resizeWorker(xSize, ySize);
 
-                var oldImage = image;
-                image = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_ARGB);
-
-                imageGraphics2D = image.createGraphics();
-                imageGraphics2D.setBackground(Color.white);
-                imageGraphics2D.clearRect(0, 0, xSize, ySize);
-                imageGraphics2D.drawImage(oldImage, 0, 0, null);
-                imageGraphics2D.dispose();
-                repaint();
             }
         });
 
@@ -453,8 +524,37 @@ public class DrawPanel extends JPanel {
         preferencesFrame.add(yField);
         preferencesFrame.add(change);
 
+        this.setPreferredSize(new Dimension(xSize, ySize));
+
         preferencesFrame.setVisible(true);
 
 
+    }
+
+    private void resizeWorker(int xSize, int ySize) {
+        this.setPreferredSize(new Dimension(xSize, ySize));
+
+        var oldImage = image;
+        image = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_ARGB);
+
+        imageGraphics2D = image.createGraphics();
+        imageGraphics2D.setBackground(Color.white);
+        imageGraphics2D.clearRect(0, 0, xSize, ySize);
+        imageGraphics2D.drawImage(oldImage, 0, 0, null);
+        imageGraphics2D.setColor(color);
+        revalidate();
+        repaint();
+    }
+
+    public void save(File file) throws IOException {
+        ImageIO.write(image, "png", file);
+    }
+
+    public void open(File file) throws IOException {
+        image = ImageIO.read(file);
+        this.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+        imageGraphics2D = (Graphics2D) image.getGraphics();
+        revalidate();
+        repaint();
     }
 }
