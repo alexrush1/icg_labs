@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="icg_paint">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/ICG_Paint_jar/icg_paint.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
