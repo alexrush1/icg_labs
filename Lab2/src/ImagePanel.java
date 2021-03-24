@@ -89,17 +89,8 @@ public class ImagePanel extends JPanel {
         repaint();
     }
 
-    protected void showOriginal() {
-        if (image == originalImage) {
-            System.out.println("clone!");
-        }
-        tmp = image;
-        image = originalImage;
-        repaint();
-    }
-
-    protected void showCurrent() {
-        image = tmp;
-        repaint();
+    protected void floyd() {
+        PreferencesFrame preferencesFrame = new PreferencesFrame();
+        preferencesFrame.floydPreferences(image, this);
     }
 }

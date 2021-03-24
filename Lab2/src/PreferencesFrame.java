@@ -2,13 +2,14 @@ import filters.Emboss;
 import filters.Floyd;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class PreferencesFrame extends JFrame {
 
     private int floydDots = 2;
 
-    protected void embossPreferences(BufferedImage image, JPanel panel) {
+    protected void floydPreferences(BufferedImage image, JPanel panel) {
         setSize(300, 150);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -45,8 +46,10 @@ public class PreferencesFrame extends JFrame {
 
         JButton processButton = new JButton("Emboss");
         processButton.addActionListener(e -> {
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             Floyd.process(image, floydDots);
             panel.repaint();
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         });
         processButton.setBounds(120, 75, 60, 15);
 

@@ -61,26 +61,9 @@ public class Board {
         embossButton.addActionListener(this::emboss);
         toolsBar.add(embossButton);
 
-        JCheckBox preferencesCheckBox = new JCheckBox("Original");
-        preferencesCheckBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                proMenu = true;
-            } else {
-                proMenu = false;
-            }
-        });
-        toolsBar.add(preferencesCheckBox);
-
-//        JCheckBox originButton = new JCheckBox("Original");
-//        originButton.addItemListener(e -> {
-//            if (e.getStateChange() == ItemEvent.SELECTED) {
-//                imagePanel.showOriginal();
-//                System.out.println("selected!");
-//            } else {
-//                imagePanel.showCurrent();
-//            }
-//        });
-//        toolsBar.add(originButton);
+        JButton floydButton = new JButton("Floyd");
+        floydButton.addActionListener(this::floyd);
+        toolsBar.add(floydButton);
 
         toolsBar.setOrientation(1);
         scrollPane = new JScrollPane(imagePanel);
@@ -209,5 +192,7 @@ public class Board {
     private void bounds(ActionEvent e) { imagePanel.boundsDeline(); }
 
     private void emboss(ActionEvent e) { imagePanel.emboss(); }
+
+    private void floyd(ActionEvent e) { imagePanel.floyd(); }
 
 }
