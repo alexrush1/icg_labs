@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="untitled_jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/untitled_jar/untitled.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/artifacts/untitled_jar/icg_paint.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
