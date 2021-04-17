@@ -8,14 +8,14 @@ import java.util.Scanner;
 public class Preferences {
 
     //function boundaries
-    public float a = -2f;
-    public float b = 2f;
-    public float c = -1f;
-    public float d = 1f;
+    public float a = -5f;
+    public float b = 5f;
+    public float c = -5f;
+    public float d = 5f;
 
     //grid size in X and Y
-    public int N = 5;
-    public int M = 3;
+    public int N = 15;
+    public int M = 10;
 
     //number of isolines
     public int K = 3;

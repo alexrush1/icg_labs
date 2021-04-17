@@ -12,7 +12,7 @@ public class Board {
     Preferences preferences = new Preferences();
 
     public Board() {
-        frame = new JFrame("ICG Filter");
+        frame = new JFrame("ICG Map");
 //        try {
 //            frame.setIconImage(new ImageIcon(Objects.requireNonNull(cl.getResource("author.jpg"))));
 //        } catch (IOException e) {}
@@ -68,13 +68,19 @@ public class Board {
         scrollPane.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                workingPanel.changeMouseValue(e.getX(), e.getY());
+                workingPanel.dynamic = true;
+                workingPanel.repaint();
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                label.setText("X: " + (e.getX() * xKoef[0] + (preferences.a))  + "  Y: " + (e.getY() * yKoef[0] + preferences.c) + " F(X, Y): ");
+                label.setText(String.format("X: %.4f", (e.getX() * xKoef[0] + (preferences.a)))  + String.format("  Y: %.4f", (e.getY() * yKoef[0] + preferences.c)) + String.format(" F(X, Y): %.4f", Math.sin((e.getY() * yKoef[0] + preferences.c)) * Math.cos((e.getX() * xKoef[0] + (preferences.a)))));
                 //System.out.println(e.getX() + " " + e.getY());
+                workingPanel.dynamic = false;
+                workingPanel.repaint();
             }
+
         });
 
         frame.add(legendPanel, BorderLayout.SOUTH);
