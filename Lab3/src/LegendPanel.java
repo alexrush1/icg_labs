@@ -30,6 +30,8 @@ public class LegendPanel extends JPanel {
     }
 
     public LegendPanel(JFrame board, Preferences preferences) {
+        min = preferences.intervals.get(0);
+        max = preferences.intervals.get(preferences.intervals.size() - 1);
         this.board = board;
         this.preferences = preferences;
         legendImage = new BufferedImage(600, 60, BufferedImage.TYPE_INT_RGB);
@@ -41,7 +43,6 @@ public class LegendPanel extends JPanel {
         fillLegend();
         spanIntervals();
         findMinMax();
-        fillIntervals();
         repaint();
     }
 
@@ -50,37 +51,15 @@ public class LegendPanel extends JPanel {
         legendGraphics.setColor(Color.BLACK);
         for (int i = 1; i < preferences.K; i++) {
             legendGraphics.drawLine((int)(interval * i), 0, (int)(interval * i), 60);
+            legendGraphics.drawString(String.format("%.3f", preferences.intervals.get(i)), (int) (interval * i), 25);
         }
     }
 
     public void findMinMax() {
-        min =  Double.MAX_VALUE;
-        max = Double.MIN_VALUE;
-
-        for (int x = 0; x < preferences.boardWidth; x++) {
-            for (int y = 0; y < preferences.boardHeight; y++) {
-                var value = Math.cos(x) * Math.sin(y);
-                if (value < min) {
-                    min = value;
-                }
-                if (value > max) {
-                    max = value;
-                }
-            }
-        }
-
         legendGraphics.drawString(String.format("%.3f", min), 0, 25);
         legendGraphics.drawString(String.format("%.3f", max), legendImage.getWidth() - 25, 25);
     }
 
-    public void fillIntervals() {
-        var interval = legendImage.getWidth() / preferences.K;
-        var valueInterval = (max - min) / preferences.K;
-        legendGraphics.setColor(Color.BLACK);
-        for (int i = 1; i < preferences.K; i++) {
-            legendGraphics.drawString(String.format("%.3f", min + valueInterval * i), interval * i, 25);
-        }
-    }
 
     public void spanIntervals() {
         var interval = legendImage.getWidth() / preferences.K;
@@ -115,12 +94,14 @@ public class LegendPanel extends JPanel {
                 newColor = colorChooser.getColor();
                 preferences.colors.set(colorNumber, newColor);
                 colorChooserFrame.setVisible(false);
+                legendImage = new BufferedImage(600, 60, BufferedImage.TYPE_INT_RGB);
+                legendGraphics = (Graphics2D) legendImage.getGraphics();
                 legendGraphics.setColor(Color.WHITE);
                 legendGraphics.fillRect(0, 0, legendImage.getWidth(), legendImage.getHeight());
                 repaint();
+                fillLegend();
                 spanIntervals();
                 findMinMax();
-                fillIntervals();
                 repaint();
             }
         });

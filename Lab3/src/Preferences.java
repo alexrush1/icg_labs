@@ -27,6 +27,8 @@ public class Preferences {
     //colors array
     ArrayList<Color> colors = new ArrayList<>();
 
+    ArrayList<Double> intervals = new ArrayList<Double>();
+
     //isolines color
     Color isolinesColor;
 
@@ -35,6 +37,32 @@ public class Preferences {
         colors.add(Color.orange);
         colors.add(Color.yellow);
         isolinesColor = Color.BLACK;
+
+        var min =  Double.MAX_VALUE;
+        var max = Double.MIN_VALUE;
+
+        for (int x = 0; x < boardWidth; x++) {
+            for (int y = 0; y < boardHeight; y++) {
+                var value = Math.cos(x) * Math.sin(y);
+                if (value < min) {
+                    min = value;
+                }
+                if (value > max) {
+                    max = value;
+                }
+            }
+        }
+        intervals.add(min);
+        var interval = (max - min) / K;
+        for (int i = 1; i < K; i++) {
+            intervals.add((double) (min + (interval * i)));
+        }
+        intervals.add(max);
+
+        for (var interva: intervals) {
+            System.out.println(interva);
+        }
+
     }
 
     public void loadPreferences(File file) throws FileNotFoundException {

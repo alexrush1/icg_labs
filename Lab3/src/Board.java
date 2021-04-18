@@ -18,7 +18,7 @@ public class Board {
 //            frame.setIconImage(new ImageIcon(Objects.requireNonNull(cl.getResource("author.jpg"))));
 //        } catch (IOException e) {}
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(640, 600);
+        frame.setSize(640, 580);
 
         cl = this.getClass().getClassLoader();
 
@@ -62,13 +62,17 @@ public class Board {
         frame.add(panel, BorderLayout.CENTER);
 
         JPanel panelLegend = new JPanel();
+        panelLegend.setLayout(new BoxLayout(panelLegend, BoxLayout.Y_AXIS));
+        //panelLegend.setLayout(null);
 
         LegendPanel legendPanel = new LegendPanel(frame, preferences);
-        legendPanel.setPreferredSize(new Dimension(640, 100));
+        legendPanel.setPreferredSize(new Dimension(640, 80));
+        legendPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(null);
-        labelPanel.setPreferredSize(new Dimension(640, 50));
+        labelPanel.setPreferredSize(new Dimension(640, 20));
 
         JLabel label = new JLabel("X: Y: F(X, Y):");
         label.setBounds(10, 0, 400, 20);
@@ -82,8 +86,8 @@ public class Board {
             }
         });
 
-        panelLegend.add(legendPanel, BorderLayout.EAST);
-        panelLegend.add(labelPanel, BorderLayout.WEST);
+        panelLegend.add(legendPanel);
+        panelLegend.add(labelPanel);
 
         workingPanel.addMouseMotionListener(new MouseMotionListener() {
             @Override
