@@ -87,12 +87,6 @@ public class WorkingPanel extends JPanel {
         graphics2D.clearRect(0, 0, 600, 400);
         grid = core.calcGridPoints();
 
-        for (int i = 1; i < preferences.K; i++) {
-            core.lines(preferences.intervals.get(i), preferences.isolinesColor);
-        }
-        for (int i = 0; i < preferences.K; i++) {
-            core.span(preferences.intervals.get(i), preferences.intervals.get(i + 1), preferences.colors.get(i), image);
-        }
 
 //        core.lines(-1, Color.BLACK);
 //        core.lines(-0.75, Color.BLACK);
@@ -110,12 +104,22 @@ public class WorkingPanel extends JPanel {
 //        core.span(0.5, 0.75, Color.blue, image);
 //        core.span(0.75, 1, Color.PINK, image);
 
+        repaint();
+        setFocusable(true);
+        //setVisible(true);
+    }
+
+    public void paint() {
+        for (int i = 1; i < preferences.K; i++) {
+            core.lines(preferences.intervals.get(i), preferences.isolinesColor);
+        }
+        for (int i = 0; i < preferences.K; i++) {
+            core.span(preferences.intervals.get(i), preferences.intervals.get(i + 1), preferences.colors.get(i), image);
+        }
         showImage = copyImage(image);
         showGraphics2D = (Graphics2D) showImage.getGraphics();
         drawGrid();
         repaint();
-        setFocusable(true);
-        //setVisible(true);
     }
 
     public static BufferedImage copyImage(BufferedImage source){

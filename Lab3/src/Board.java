@@ -12,6 +12,7 @@ public class Board {
     ClassLoader cl;
     Preferences preferences = new Preferences();
 
+
     public Board() {
         frame = new JFrame("ICG Map");
 //        try {
@@ -65,9 +66,13 @@ public class Board {
         panelLegend.setLayout(new BoxLayout(panelLegend, BoxLayout.Y_AXIS));
         //panelLegend.setLayout(null);
 
-        LegendPanel legendPanel = new LegendPanel(frame, preferences);
-        legendPanel.setPreferredSize(new Dimension(640, 80));
-        legendPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel legendPanelMain = new JPanel();
+        legendPanelMain.setLayout(null);
+        legendPanelMain.setPreferredSize(new Dimension(640, 100));
+        LegendPanel legendPanel = new LegendPanel(frame, preferences, workingPanel);
+        legendPanel.setBounds(15, 20, 600, 60);
+        System.out.println(legendPanel.getX() + " " + legendPanel.getY());
+        legendPanelMain.add(legendPanel);
 
 
         JPanel labelPanel = new JPanel();
@@ -86,7 +91,19 @@ public class Board {
             }
         });
 
-        panelLegend.add(legendPanel);
+        legendPanel.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                //System.out.println(e.getX() + " " + e.getY());
+            }
+        });
+
+        panelLegend.add(legendPanelMain);
         panelLegend.add(labelPanel);
 
         workingPanel.addMouseMotionListener(new MouseMotionListener() {
@@ -101,7 +118,7 @@ public class Board {
             @Override
             public void mouseMoved(MouseEvent e) {
                 label.setText(String.format("X: %.4f", (e.getX() * xKoef[0] + (preferences.a)))  + String.format("  Y: %.4f", (e.getY() * yKoef[0] + preferences.c)) + String.format(" F(X, Y): %.4f", Math.sin((e.getY() * yKoef[0] + preferences.c)) * Math.cos((e.getX() * xKoef[0] + (preferences.a)))));
-                System.out.println(e.getX() + " " + e.getY());
+                //System.out.println(e.getX() + " " + e.getY());
                 workingPanel.dynamic = false;
                 workingPanel.repaint();
             }
