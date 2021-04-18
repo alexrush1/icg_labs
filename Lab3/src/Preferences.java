@@ -7,6 +7,10 @@ import java.util.Scanner;
 
 public class Preferences {
 
+    //board size
+    public int boardHeight = 400;
+    public int boardWidth = 600;
+
     //function boundaries
     public float a = -5f;
     public float b = 5f;
@@ -15,7 +19,7 @@ public class Preferences {
 
     //grid size in X and Y
     public int N = 15;
-    public int M = 12;
+    public int M = 8;
 
     //number of isolines
     public int K = 3;
@@ -25,6 +29,13 @@ public class Preferences {
 
     //isolines color
     Color isolinesColor;
+
+    public Preferences() {
+        colors.add(Color.red);
+        colors.add(Color.orange);
+        colors.add(Color.yellow);
+        isolinesColor = Color.BLACK;
+    }
 
     public void loadPreferences(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(new FileInputStream(file));

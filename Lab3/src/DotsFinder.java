@@ -31,8 +31,8 @@ public class DotsFinder {
     }
 
     public static void fourWay(Preferences preferences, double xKoef, double yKoef, int y, int x, ArrayList<Pair<Double, Double>> dots, double upLeftValue, double upRightValue, double downLeftValue, double downRightValue, double value, Graphics graphics2D) {
-        var intervalX = 629 / (double) preferences.N;
-        var intervalY = 425 / (double) preferences.M;
+        var intervalX = preferences.boardWidth / (double) preferences.N;
+        var intervalY = preferences.boardHeight / (double) preferences.M;
 
         var centerY = (0.5 + y);
         var centerX = (0.5 + x);
@@ -100,8 +100,8 @@ public class DotsFinder {
     }
 
     public static void findDots(double[] grid, double value, Preferences preferences, ArrayList<Pair<Double, Double>> dots, Graphics graphics2D, double xKoef, double yKoef) {
-        var intervalX = 629 / (double) preferences.N;
-        var intervalY = 425 / (double) preferences.M;
+        var intervalX = preferences.boardWidth / (double) preferences.N;
+        var intervalY = preferences.boardHeight / (double) preferences.M;
 
         int count = 0;
         for (int i = 0; i < preferences.M; i++) {

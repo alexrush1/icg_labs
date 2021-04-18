@@ -73,12 +73,12 @@ public class Core {
 
 
     public void span(double min, double max, Color newColor, BufferedImage image) {
-        Span span = new Span(image, newColor, 629, 425);
+        Span span = new Span(image, newColor, preferences.boardWidth, preferences.boardHeight);
 
         for (int x = 0; x < preferences.N; x++) {
             for (int y = 0; y < preferences.M; y++) {
                 if (grid[y * preferences.N + x] > min && grid[y * preferences.N + x] <= max) {
-                    span.spanFill((int)(x * (629 / preferences.N)), (int)(y * (425 / preferences.M)));
+                    span.spanFill((int)(x * (preferences.boardWidth/ preferences.N)), (int)(y * (preferences.boardHeight / preferences.M)));
                 }
             }
         }

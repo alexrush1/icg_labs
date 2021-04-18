@@ -25,17 +25,20 @@ public class WorkingPanel extends JPanel {
     double xKoef;
     double yKoef;
 
+    public void setXKoef(double value) { xKoef = value; }
+    public void setYKoef(double value) { yKoef = value; }
+
     @Override
     protected void paintComponent(Graphics g) {
 
         var graphics = (Graphics2D) g;
 
-        requestFocus();
+        //requestFocus();
 
-        AffineTransformOp = new AffineTransformOp(AffineTransform.getScaleInstance(
-                (board.getWidth() - 30) / (double) image.getWidth(),
-                (board.getHeight() - 160) / (double) image.getHeight()
-        ), AffineTransformOp.TYPE_BILINEAR);
+//        AffineTransformOp = new AffineTransformOp(AffineTransform.getScaleInstance(
+//                (board.getWidth() - 57) / (double) preferences.boardWidth,
+//                (board.getHeight() - 180) / (double) preferences.boardHeight
+//        ), AffineTransformOp.TYPE_BILINEAR);
 
         graphics.drawImage(showImage, AffineTransformOp, 0, 0);
 
@@ -48,26 +51,23 @@ public class WorkingPanel extends JPanel {
     }
 
     public void changeMouseValue(int mouseX, int mouseY, double x, double y) {
-        var intervalX = 629 / (double) preferences.N;
-        var intervalY = 425 / (double) preferences.M;
+        var intervalX = preferences.boardWidth / (double) preferences.N;
+        var intervalY = preferences.boardHeight / (double) preferences.M;
 
-        int xNormalCoord = (int) (mouseX / intervalX);
-        int yNormalCoord = (int) (mouseY / intervalY);
+        double xNormalCoord = (mouseX / intervalX);
+        double yNormalCoord = (mouseY / intervalY);
 
-        var xCoord = xNormalCoord * intervalX * xKoef + preferences.a;
-        var yCoord = yNormalCoord * intervalY * yKoef + preferences.c;
+        double dotCoordX = xNormalCoord % 1;
+        double dotCoordY = yNormalCoord % 1;
 
-        System.out.println("mouseX " + x + " mouseY " + y);
+        var upLeftValue = grid[(int)yNormalCoord * preferences.N + (int)xNormalCoord];
+        var downLeftValue = grid[((int)yNormalCoord + 1) * preferences.N + (int)xNormalCoord];
+        var upRightValue = grid[(int)yNormalCoord * preferences.N + (int)xNormalCoord + 1];
+        var downRightValue = grid[((int)yNormalCoord + 1) * preferences.N + 1 + (int)xNormalCoord];
 
-        var upLeftValue = grid[yNormalCoord * preferences.N + xNormalCoord];
-        var downLeftValue = grid[(yNormalCoord + 1) * preferences.N + xNormalCoord];
-        var upRightValue = grid[yNormalCoord * preferences.N + xNormalCoord + 1];
-        var downRightValue = grid[(yNormalCoord + 1) * preferences.N + 1 + xNormalCoord];
-
-        var R2value = (xCoord + 1 - x) * downLeftValue + (x - xCoord) * downRightValue;
-        var R1value = (xCoord + 1 - x) * upLeftValue + (x - xCoord) * upRightValue;
-
-        mouseValue = (yCoord - y) * R1value + (y - yCoord + 1) * R2value;
+        var R1 = (upRightValue - upLeftValue) * dotCoordX + upLeftValue;
+        var R2 = (downRightValue - downLeftValue) * dotCoordX + downLeftValue;
+        mouseValue = (R2 - R1) * dotCoordY + R1;
 
     }
 
@@ -76,15 +76,15 @@ public class WorkingPanel extends JPanel {
         this.preferences = preferences;
         this.xKoef = xKoef;
         this.yKoef = yKoef;
-        image = new BufferedImage(629, 425, BufferedImage.TYPE_3BYTE_BGR);
-        showImage = new BufferedImage(629, 425, BufferedImage.TYPE_3BYTE_BGR);
+        image = new BufferedImage(preferences.boardWidth, preferences.boardHeight, BufferedImage.TYPE_3BYTE_BGR);
+        showImage = new BufferedImage(preferences.boardWidth, preferences.boardHeight, BufferedImage.TYPE_3BYTE_BGR);
         graphics2D = (Graphics2D) image.getGraphics();
-        core = new Core(preferences, 629, 425, xKoef, yKoef, graphics2D);
+        core = new Core(preferences, preferences.boardWidth, preferences.boardHeight, xKoef, yKoef, graphics2D);
         setLayout(new BorderLayout());
 
 
         graphics2D.setBackground(Color.white);
-        graphics2D.clearRect(0, 0, 629, 425);
+        graphics2D.clearRect(0, 0, 600, 400);
         grid = core.calcGridPoints();
 
         core.lines(-1, Color.BLACK);
@@ -120,16 +120,16 @@ public class WorkingPanel extends JPanel {
     }
 
     protected void drawGrid() {
-        var interval = image.getWidth() / (double) preferences.N;
+        var interval = preferences.boardWidth / (double) preferences.N;
         showGraphics2D.setColor(Color.GREEN);
         for (int i = 1; i <= preferences.N; i++) {
-            showGraphics2D.drawLine((int)(interval * i), 0, (int)(interval * i), image.getHeight());
+            showGraphics2D.drawLine((int)(interval * i), 0, (int)(interval * i), preferences.boardHeight);
         }
 
-        interval = image.getHeight() / (double) preferences.M;
+        interval = preferences.boardHeight / (double) preferences.M;
         graphics2D.setColor(Color.GREEN);
         for (int i = 1; i <= preferences.M; i++) {
-            showGraphics2D.drawLine(0, (int)(interval * i), image.getWidth(), (int)(interval * i));
+            showGraphics2D.drawLine(0, (int)(interval * i), preferences.boardWidth, (int)(interval * i));
         }
 
     }

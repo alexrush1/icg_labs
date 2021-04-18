@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -17,15 +18,10 @@ public class Board {
 //            frame.setIconImage(new ImageIcon(Objects.requireNonNull(cl.getResource("author.jpg"))));
 //        } catch (IOException e) {}
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(640, 480);
+        frame.setSize(640, 600);
 
         cl = this.getClass().getClassLoader();
 
-        //BufferedImage pane = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
-        //Graphics g = pane.getGraphics();
-//        imagePanel = new ImagePanel(frame);
-//        imagePanel.setSize(640, 480);
-//        imagePanel.setPreferredSize(new Dimension(500, 500));
         frame.setMinimumSize(new Dimension(640,580));
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createFileMenu());
@@ -35,40 +31,59 @@ public class Board {
         panel.setLayout(null);
         //frame.setLayout(null);
 
-        final double[] xKoef = {(preferences.b - preferences.a) / (double) 629};
-        final double[] yKoef = {(preferences.d - preferences.c) / (double) 425};
+        final double[] xKoef = {(preferences.b - preferences.a) / (double) preferences.boardWidth};
+        final double[] yKoef = {(preferences.d - preferences.c) / (double) preferences.boardHeight};
 
         WorkingPanel workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0]);
-        workingPanel.setPreferredSize(new Dimension(640, 400));
+        workingPanel.setPreferredSize(new Dimension((int)preferences.boardWidth, (int)preferences.boardWidth));
         //JScrollPane scrollPane = new JScrollPane(workingPanel);
         //scrollPane.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
         //panel.add(scrollPane);
-        //scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
+        workingPanel.setBounds(0, 0, panel.getWidth(), panel.getHeight());
         workingPanel.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
         panel.add(workingPanel);
-        //panel.setBounds(4, 4, frame.getWidth() - 79, frame.getHeight() - 75);
+//        frame.setLayout(null);
+//        panel.setBounds(4, 4, frame.getWidth() - 20, frame.getHeight() - 75);
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                xKoef[0] = (preferences.b - preferences.a) / (double) panel.getWidth();
-                yKoef[0] = (preferences.d - preferences.c) / (double) panel.getHeight();
+                xKoef[0] = (preferences.b - preferences.a) / (double) workingPanel.getWidth();
+                yKoef[0] = (preferences.d - preferences.c) / (double) workingPanel.getHeight();
+                workingPanel.setXKoef(xKoef[0]);
+                workingPanel.setYKoef(yKoef[0]);
                 //scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
                 //scrollPane.repaint();
                 //scrollPane.revalidate();
-                workingPanel.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
+                workingPanel.setBounds(18, 4, frame.getWidth() - 55, frame.getHeight() - 179);
                 workingPanel.repaint();
                 workingPanel.revalidate();
             }
         });
         frame.add(panel, BorderLayout.CENTER);
 
-        JPanel legendPanel = new JPanel();
-        legendPanel.setLayout(null);
-        legendPanel.setPreferredSize(new Dimension(400, 100));
-        JLabel label = new JLabel("X: Y: F(X, Y):");
-        label.setBounds(10, 80, 400, 20);
-        legendPanel.add(label);
+        JPanel panelLegend = new JPanel();
 
+        LegendPanel legendPanel = new LegendPanel(frame, preferences);
+        legendPanel.setPreferredSize(new Dimension(640, 100));
+
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(null);
+        labelPanel.setPreferredSize(new Dimension(640, 50));
+
+        JLabel label = new JLabel("X: Y: F(X, Y):");
+        label.setBounds(10, 0, 400, 20);
+        labelPanel.add(label);
+
+
+        legendPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                legendPanel.changeColor(e.getX(), e.getY());
+            }
+        });
+
+        panelLegend.add(legendPanel, BorderLayout.EAST);
+        panelLegend.add(labelPanel, BorderLayout.WEST);
 
         workingPanel.addMouseMotionListener(new MouseMotionListener() {
             @Override
@@ -82,14 +97,14 @@ public class Board {
             @Override
             public void mouseMoved(MouseEvent e) {
                 label.setText(String.format("X: %.4f", (e.getX() * xKoef[0] + (preferences.a)))  + String.format("  Y: %.4f", (e.getY() * yKoef[0] + preferences.c)) + String.format(" F(X, Y): %.4f", Math.sin((e.getY() * yKoef[0] + preferences.c)) * Math.cos((e.getX() * xKoef[0] + (preferences.a)))));
-                //System.out.println(e.getX() + " " + e.getY());
+                System.out.println(e.getX() + " " + e.getY());
                 workingPanel.dynamic = false;
                 workingPanel.repaint();
             }
 
         });
 
-        frame.add(legendPanel, BorderLayout.SOUTH);
+        frame.add(panelLegend, BorderLayout.SOUTH);
 
         frame.pack();
         frame.setLocationRelativeTo(null);
