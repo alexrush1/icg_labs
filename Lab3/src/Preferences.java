@@ -15,7 +15,7 @@ public class Preferences {
 
     //grid size in X and Y
     public int N = 15;
-    public int M = 10;
+    public int M = 12;
 
     //number of isolines
     public int K = 3;

@@ -35,24 +35,29 @@ public class Board {
         panel.setLayout(null);
         //frame.setLayout(null);
 
-        final double[] xKoef = {(preferences.b - preferences.a) / (double) 640};
-        final double[] yKoef = {(preferences.d - preferences.c) / (double) 400};
+        final double[] xKoef = {(preferences.b - preferences.a) / (double) 629};
+        final double[] yKoef = {(preferences.d - preferences.c) / (double) 425};
 
         WorkingPanel workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0]);
-        workingPanel.setPreferredSize(new Dimension(400, 400));
-        JScrollPane scrollPane = new JScrollPane(workingPanel);
-        scrollPane.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
-        panel.add(scrollPane);
-        scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
+        workingPanel.setPreferredSize(new Dimension(640, 400));
+        //JScrollPane scrollPane = new JScrollPane(workingPanel);
+        //scrollPane.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
+        //panel.add(scrollPane);
+        //scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
+        workingPanel.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
+        panel.add(workingPanel);
         //panel.setBounds(4, 4, frame.getWidth() - 79, frame.getHeight() - 75);
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 xKoef[0] = (preferences.b - preferences.a) / (double) panel.getWidth();
                 yKoef[0] = (preferences.d - preferences.c) / (double) panel.getHeight();
-                scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
-                scrollPane.repaint();
-                scrollPane.revalidate();
+                //scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
+                //scrollPane.repaint();
+                //scrollPane.revalidate();
+                workingPanel.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
+                workingPanel.repaint();
+                workingPanel.revalidate();
             }
         });
         frame.add(panel, BorderLayout.CENTER);
@@ -65,10 +70,11 @@ public class Board {
         legendPanel.add(label);
 
 
-        scrollPane.addMouseMotionListener(new MouseMotionListener() {
+        workingPanel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                workingPanel.changeMouseValue(e.getX(), e.getY());
+                workingPanel.changeMouseValue(e.getX(), e.getY(), e.getX() * xKoef[0] + (preferences.a), (e.getY() * yKoef[0] + preferences.c));
+                label.setText(String.format("X: %.4f", (e.getX() * xKoef[0] + (preferences.a)))  + String.format("  Y: %.4f", (e.getY() * yKoef[0] + preferences.c)) + String.format(" F(X, Y): %.4f", Math.sin((e.getY() * yKoef[0] + preferences.c)) * Math.cos((e.getX() * xKoef[0] + (preferences.a)))));
                 workingPanel.dynamic = true;
                 workingPanel.repaint();
             }

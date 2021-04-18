@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,4 +71,16 @@ public class Core {
         DotsFinder.findDots(grid, value, preferences, dots, graphics2D, xKoef, yKoef);
     }
 
+
+    public void span(double min, double max, Color newColor, BufferedImage image) {
+        Span span = new Span(image, newColor, 629, 425);
+
+        for (int x = 0; x < preferences.N; x++) {
+            for (int y = 0; y < preferences.M; y++) {
+                if (grid[y * preferences.N + x] > min && grid[y * preferences.N + x] <= max) {
+                    span.spanFill((int)(x * (629 / preferences.N)), (int)(y * (425 / preferences.M)));
+                }
+            }
+        }
+    }
 }
