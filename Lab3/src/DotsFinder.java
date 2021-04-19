@@ -104,41 +104,41 @@ public class DotsFinder {
         var intervalY = preferences.boardHeight / (double) preferences.M;
 
         int count = 0;
-        for (int i = 0; i < preferences.M; i++) {
-            for (int j = 0; j < preferences.N; j++) {
-                var upLeftValue = grid[i * preferences.N + j];
-                var downLeftValue = grid[(i + 1) * preferences.N + j];
-                var upRightValue = grid[i * preferences.N + j + 1];
-                var downRightValue = grid[(i + 1) * preferences.N + 1 + j];
+        for (int y = 0; y < preferences.M; y++) {
+            for (int x = 0; x < preferences.N; x++) {
+                var upLeftValue = grid[y * preferences.N + x];
+                var downLeftValue = grid[(y + 1) * preferences.N + x];
+                var upRightValue = grid[y * preferences.N + x + 1];
+                var downRightValue = grid[(y + 1) * preferences.N + 1 + x];
 
                 var previousCount = count;
 
                 if ((upLeftValue < value && downLeftValue > value) || (upLeftValue > value && downLeftValue < value)) {
                     var polValue = LinInterploation.linInterpolation(upLeftValue, downLeftValue, value);
-                    dots.add(new Pair<Double, Double>((double) j, i + polValue));
+                    dots.add(new Pair<Double, Double>((double) x, y + polValue));
                     count++;
                 }
 
                 if ((upLeftValue < value && upRightValue > value) || (upLeftValue > value && upRightValue < value)) {
                     var polValue = LinInterploation.linInterpolation(upLeftValue, upRightValue, value);
-                    dots.add(new Pair<Double, Double>(j + polValue, (double) i));
+                    dots.add(new Pair<Double, Double>(x + polValue, (double) y));
                     count++;
                 }
 
                 if ((downLeftValue < value && downRightValue > value) || (downLeftValue > value && downRightValue < value)) {
                     var polValue = LinInterploation.linInterpolation(downLeftValue, downRightValue, value);
-                    dots.add(new Pair<Double, Double>(j + polValue, (double) (i + 1)));
+                    dots.add(new Pair<Double, Double>(x + polValue, (double) (y + 1)));
                     count++;
                 }
 
                 if ((upRightValue < value && downRightValue > value) || (upRightValue > value && downRightValue < value)) {
                     var polValue = LinInterploation.linInterpolation(upRightValue, downRightValue, value);
-                    dots.add(new Pair<Double, Double>((double) (j + 1), i + polValue));
+                    dots.add(new Pair<Double, Double>((double) (x + 1), y + polValue));
                     count++;
                 }
 
                 if (count - previousCount == 4) {
-                    fourWay(preferences, xKoef, yKoef, i, j, dots, upLeftValue, upRightValue, downLeftValue, downRightValue, value, graphics2D);
+                    fourWay(preferences, xKoef, yKoef, y, x, dots, upLeftValue, upRightValue, downLeftValue, downRightValue, value, graphics2D);
                     count += 4;
                 } else {
                     for (int k = previousCount; k < count - 1; k++) {
