@@ -56,17 +56,17 @@ public class LegendPanel extends JPanel {
     }
 
     public void fillLegend() {
-        var interval = legendImage.getWidth() / preferences.K;
+        var interval = legendImage.getWidth() / (preferences.K + 1);
         legendGraphics.setColor(Color.BLACK);
-        for (int i = 1; i < preferences.K; i++) {
+        for (int i = 1; i <= preferences.K; i++) {
             legendGraphics.drawLine((int)(interval * i), 0, (int)(interval * i), 60);
         }
     }
 
     public void drawIntervals() {
-        var interval = legendImage.getWidth() / preferences.K;
+        var interval = legendImage.getWidth() / (preferences.K + 1);
         legendGraphics.setColor(Color.BLACK);
-        for (int i = 1; i < preferences.K; i++) {
+        for (int i = 1; i <= preferences.K; i++) {
             legendGraphics.drawString(String.format("%.3f", preferences.intervals.get(i)), (int) (interval * i), 25);
         }
     }
@@ -78,7 +78,7 @@ public class LegendPanel extends JPanel {
 
 
     public void spanIntervals() {
-        var interval = legendImage.getWidth() / preferences.K;
+        var interval = legendImage.getWidth() / (preferences.K + 1);
         var count = 0;
         for (var color: preferences.colors) {
             Span span = new Span(legendImage, color, legendImage.getWidth(), legendImage.getHeight());

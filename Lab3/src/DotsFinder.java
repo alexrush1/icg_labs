@@ -4,32 +4,6 @@ import java.util.ArrayList;
 
 public class DotsFinder {
 
-    public static void findHorizontalDots(double[] grid, double value, Preferences preferences, ArrayList<Pair<Double, Double>> dots) {
-        for (int i = 0; i <= preferences.M; i++) {
-            for (int j = 0; j < preferences.N; j++) {
-                var lValue = grid[i * preferences.N + j];
-                var rValue = grid[i * preferences.N + j + 1];
-                if (lValue < value && rValue > value) {
-                    var polValue = LinInterploation.linInterpolation(lValue, rValue, value);
-                    dots.add(new Pair<>(lValue + polValue, rValue));
-                }
-            }
-        }
-    }
-
-    public static void findVerticalDots(double[] grid, double value, Preferences preferences, ArrayList<Pair<Double, Double>> dots) {
-        for (int i = 0; i < preferences.M; i++) {
-            for (int j = 0; j <= preferences.N; j++) {
-                var upValue = grid[i * preferences.N + j];
-                var downValue = grid[(i + 1) * preferences.N];
-                if (upValue < value && downValue > value) {
-                    var polValue = LinInterploation.linInterpolation(upValue, downValue, value);
-                    dots.add(new Pair<>(upValue + polValue, downValue));
-                }
-            }
-        }
-    }
-
     public static void fourWay(Preferences preferences, double xKoef, double yKoef, int y, int x, ArrayList<Pair<Double, Double>> dots, double upLeftValue, double upRightValue, double downLeftValue, double downRightValue, double value, Graphics graphics2D) {
         var intervalX = preferences.boardWidth / (double) preferences.N;
         var intervalY = preferences.boardHeight / (double) preferences.M;

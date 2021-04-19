@@ -98,11 +98,11 @@ public class Board {
 //            frame.setIconImage(new ImageIcon(Objects.requireNonNull(cl.getResource("author.jpg"))));
 //        } catch (IOException e) {}
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(640, 580);
+        frame.setSize(640, 600);
 
         cl = this.getClass().getClassLoader();
 
-        frame.setMinimumSize(new Dimension(640,580));
+        frame.setMinimumSize(new Dimension(640,600));
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(createFileMenu());
         menuBar.add(createAboutMenu());

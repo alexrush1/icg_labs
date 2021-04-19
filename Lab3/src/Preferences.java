@@ -91,8 +91,8 @@ public class Preferences {
         }
         intervals.clear();
         intervals.add(min);
-        var interval = (max - min) / K;
-        for (int i = 1; i < K; i++) {
+        var interval = (max - min) / (K + 1);
+        for (int i = 1; i <= K; i++) {
             intervals.add((double) (min + (interval * i)));
         }
         intervals.add(max);
@@ -118,7 +118,7 @@ public class Preferences {
         System.out.println("Isolines: " + K);
 
         colors.clear();
-        for (int i = 0; i < K; i++) {
+        for (int i = 0; i <= K; i++) {
             colors.add(new Color(scanner.nextInt(), scanner.nextInt(), scanner.nextInt()));
         }
 
