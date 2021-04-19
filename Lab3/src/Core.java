@@ -28,13 +28,12 @@ public class Core {
 
         grid = new double[preferences.N * preferences.M * 2];
 
-        int count = 0;
         for (int x = 0; x <= preferences.N; x++) {
             for (int y = 0; y <= preferences.M; y++) {
                 grid[y * preferences.N + x] = Math.sin((y * intervalY * yKoef + preferences.c)) * Math.cos((x * intervalX * xKoef + preferences.a));
-                System.out.printf("%s", String.format("%.5f  ", Math.sin((y * intervalY * yKoef + preferences.c)) * Math.cos((x * intervalX * xKoef + preferences.a))));
+                //System.out.printf("%s", String.format("%.5f  ", Math.sin((y * intervalY * yKoef + preferences.c)) * Math.cos((x * intervalX * xKoef + preferences.a))));
             }
-            System.out.println();
+            //System.out.println();
         }
         return grid;
     }
@@ -71,14 +70,17 @@ public class Core {
         DotsFinder.findDots(grid, value, preferences, dots, graphics2D, xKoef, yKoef);
     }
 
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
 
     public void span(double min, double max, Color newColor, BufferedImage image) {
         Span span = new Span(image, newColor, preferences.boardWidth, preferences.boardHeight);
 
-        for (int x = 0; x < preferences.N; x++) {
-            for (int y = 0; y < preferences.M; y++) {
+        for (int x = 0; x <= preferences.N; x++) {
+            for (int y = 0; y <= preferences.M; y++) {
                 if (grid[y * preferences.N + x] > min && grid[y * preferences.N + x] <= max) {
-                    span.spanFill((int)(x * (preferences.boardWidth/ preferences.N)), (int)(y * (preferences.boardHeight / preferences.M)));
+                    span.spanFill(clamp(x * (preferences.boardWidth/ preferences.N), 0, preferences.boardWidth - 1), clamp(y * (preferences.boardHeight / preferences.M) - 1, 0, preferences.boardHeight - 1));
                 }
             }
         }

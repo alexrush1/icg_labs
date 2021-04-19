@@ -10,7 +10,9 @@ import java.util.Objects;
 public class Board {
     JFrame frame;
     ClassLoader cl;
-    Preferences preferences = new Preferences();
+    WorkingPanel workingPanel;
+    LegendPanel legendPanel;
+    Preferences preferences = new Preferences(this);
 
 
     public Board() {
@@ -35,7 +37,7 @@ public class Board {
         final double[] xKoef = {(preferences.b - preferences.a) / (double) preferences.boardWidth};
         final double[] yKoef = {(preferences.d - preferences.c) / (double) preferences.boardHeight};
 
-        WorkingPanel workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0]);
+        workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0]);
         workingPanel.setPreferredSize(new Dimension((int)preferences.boardWidth, (int)preferences.boardWidth));
         //JScrollPane scrollPane = new JScrollPane(workingPanel);
         //scrollPane.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
@@ -48,14 +50,14 @@ public class Board {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                xKoef[0] = (preferences.b - preferences.a) / (double) workingPanel.getWidth();
-                yKoef[0] = (preferences.d - preferences.c) / (double) workingPanel.getHeight();
-                workingPanel.setXKoef(xKoef[0]);
-                workingPanel.setYKoef(yKoef[0]);
+//                xKoef[0] = (preferences.b - preferences.a) / (double) preferences.boardWidth;
+//                yKoef[0] = (preferences.d - preferences.c) / (double) preferences.boardHeight;
+//                workingPanel.setXKoef(xKoef[0]);
+//                workingPanel.setYKoef(yKoef[0]);
                 //scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);
                 //scrollPane.repaint();
                 //scrollPane.revalidate();
-                workingPanel.setBounds(18, 4, frame.getWidth() - 55, frame.getHeight() - 179);
+                workingPanel.setBounds(18, 4, frame.getWidth() - 45, frame.getHeight() - 179);
                 workingPanel.repaint();
                 workingPanel.revalidate();
             }
@@ -69,7 +71,7 @@ public class Board {
         JPanel legendPanelMain = new JPanel();
         legendPanelMain.setLayout(null);
         legendPanelMain.setPreferredSize(new Dimension(640, 100));
-        LegendPanel legendPanel = new LegendPanel(frame, preferences, workingPanel);
+        legendPanel = new LegendPanel(frame, preferences, workingPanel);
         legendPanel.setBounds(15, 20, 600, 60);
         System.out.println(legendPanel.getX() + " " + legendPanel.getY());
         legendPanelMain.add(legendPanel);
@@ -88,18 +90,6 @@ public class Board {
             @Override
             public void mouseClicked(MouseEvent e) {
                 legendPanel.changeColor(e.getX(), e.getY());
-            }
-        });
-
-        legendPanel.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                //System.out.println(e.getX() + " " + e.getY());
             }
         });
 

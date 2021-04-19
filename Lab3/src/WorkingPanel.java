@@ -112,6 +112,7 @@ public class WorkingPanel extends JPanel {
     public void paint() {
         for (int i = 1; i < preferences.K; i++) {
             core.lines(preferences.intervals.get(i), preferences.isolinesColor);
+            System.out.println("Line value - " + preferences.intervals.get(i));
         }
         for (int i = 0; i < preferences.K; i++) {
             core.span(preferences.intervals.get(i), preferences.intervals.get(i + 1), preferences.colors.get(i), image);

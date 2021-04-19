@@ -47,7 +47,7 @@ public class LegendPanel extends JPanel {
         drawIntervals();
         findMinMax();
         repaint();
-        turnGradient();
+        //turnGradient();
         workingPanel.paint();
     }
 
@@ -106,16 +106,7 @@ public class LegendPanel extends JPanel {
                 newColor = colorChooser.getColor();
                 preferences.colors.set(colorNumber, newColor);
                 colorChooserFrame.setVisible(false);
-                legendImage = new BufferedImage(600, 60, BufferedImage.TYPE_INT_RGB);
-                legendGraphics = (Graphics2D) legendImage.getGraphics();
-                legendGraphics.setColor(Color.WHITE);
-                legendGraphics.fillRect(0, 0, legendImage.getWidth(), legendImage.getHeight());
-                repaint();
-                fillLegend();
-                spanIntervals();
-                drawIntervals();
-                findMinMax();
-                repaint();
+                paint();
                 workingPanel.paint();
             }
         });
@@ -128,65 +119,49 @@ public class LegendPanel extends JPanel {
         return Math.max(min, Math.min(max, value));
     }
 
+    public void paint() {
+        legendImage = new BufferedImage(600, 60, BufferedImage.TYPE_INT_RGB);
+        legendGraphics = (Graphics2D) legendImage.getGraphics();
+        legendGraphics.setColor(Color.WHITE);
+        legendGraphics.fillRect(0, 0, legendImage.getWidth(), legendImage.getHeight());
+        repaint();
+        fillLegend();
+        spanIntervals();
+        drawIntervals();
+        findMinMax();
+        repaint();
+    }
 
     public void turnGradient() {
-        var interval = legendImage.getWidth() / preferences.K;
+        var interval = legendImage.getWidth() / (preferences.K - 1);
         System.out.println(interval);
         int r1, r2, g1, g2, b1, b2;
-        for (int x = 0; x < preferences.K - 2; x++) {
-            System.out.println("cycle");
+        for (int x = 0; x < preferences.K - 1; x++) {
+
             r1 = legendImage.getRGB(interval * x + 1, 5)>>16&0xFF;
-            r2 = legendImage.getRGB((interval * (x + 2)) - 1, 5)>>16&0xFF;
+            r2 = legendImage.getRGB((interval * (x + 1)) - 1, 5)>>16&0xFF;
 
             g1 = legendImage.getRGB(interval * x + 1, 5)>>8&0xFF;
-            g2 = legendImage.getRGB((interval * (x + 2)) - 1, 5)>>8&0xFF;
+            g2 = legendImage.getRGB((interval * (x + 1)) - 1, 5)>>8&0xFF;
 
             b1 = legendImage.getRGB(interval * x + 1, 5)&0xFF;
-            b2 = legendImage.getRGB((interval * (x + 2)) - 1, 5)&0xFF;
+            b2 = legendImage.getRGB((interval * (x + 1)) - 1, 5)&0xFF;
 
-            for (int i = interval * x; i < interval * (x + 2); i++) {
+            System.out.println((interval * x + 1) + "  " + ((interval * (x + 1)) - 1));
+
+            for (int i = interval * x; i < interval * (x + 1); i++) {
                 double perc = i / (double) (interval * (x + 2));
-                System.out.println(perc);
                 var rs = r1 + ((r2 - r1) * perc);
                 var gs = g1 + ((g2 - g1) * perc);
                 var bs = b1 + ((b2 - b1) * perc);
 
-//                rs = clamp((int)rs, 0, 255);
-//                gs = clamp((int)gs, 0, 255);
-//                bs = clamp((int)bs, 0, 255);
 
-                for (int j = 0; j < legendImage.getHeight(); j++) {
+                for (int j = 0; j < legendImage.getHeight() -  1; j++) {
                     legendImage.setRGB(i, j, (new Color((int)rs, (int)gs, (int)bs)).getRGB());
                 }
             }
         }
 
-        r1 = legendImage.getRGB( 1, 5)>>16&0xFF;
-        r2 = legendImage.getRGB((interval * (preferences.K)) - 1, 5)>>16&0xFF;
-
-        g1 = legendImage.getRGB(1, 5)>>8&0xFF;
-        g2 = legendImage.getRGB((interval * (preferences.K)) - 1, 5)>>8&0xFF;
-
-        b1 = legendImage.getRGB(1, 5)&0xFF;
-        b2 = legendImage.getRGB((interval * (preferences.K)) - 1, 5)&0xFF;
-
-        for (int i = 0; i < ima; i++) {
-            double perc = i / (double) (interval * (x + 2));
-            System.out.println(perc);
-            var rs = r1 + ((r2 - r1) * perc);
-            var gs = g1 + ((g2 - g1) * perc);
-            var bs = b1 + ((b2 - b1) * perc);
-
-//                rs = clamp((int)rs, 0, 255);
-//                gs = clamp((int)gs, 0, 255);
-//                bs = clamp((int)bs, 0, 255);
-
-            for (int j = 0; j < legendImage.getHeight(); j++) {
-                legendImage.setRGB(i, j, (new Color((int)rs, (int)gs, (int)bs)).getRGB());
-            }
-
-
-        //}
         repaint();
     }
 

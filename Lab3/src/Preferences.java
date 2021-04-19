@@ -32,7 +32,10 @@ public class Preferences {
     //isolines color
     Color isolinesColor;
 
-    public Preferences() {
+    Board board;
+
+    public Preferences(Board board) {
+        this.board = board;
         colors.add(Color.red);
         colors.add(Color.orange);
         colors.add(Color.yellow);
@@ -65,6 +68,34 @@ public class Preferences {
 
     }
 
+    public void loadIntervals() {
+        var min =  Double.MAX_VALUE;
+        var max = Double.MIN_VALUE;
+
+        for (double x = a; x < b; x+=0.001) {
+            for (double y = c; y < d; y+=0.001) {
+                var value = Math.cos(x) * Math.sin(y);
+                if (value < min) {
+                    min = value;
+                }
+                if (value > max) {
+                    max = value;
+                }
+            }
+        }
+        intervals.clear();
+        intervals.add(min);
+        var interval = (max - min) / K;
+        for (int i = 1; i < K; i++) {
+            intervals.add((double) (min + (interval * i)));
+        }
+        intervals.add(max);
+
+        for (var interva: intervals) {
+            System.out.println(interva);
+        }
+    }
+
     public void loadPreferences(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(new FileInputStream(file));
         a = scanner.nextFloat();
@@ -80,6 +111,7 @@ public class Preferences {
         K = scanner.nextInt();
         System.out.println("Isolines: " + K);
 
+        colors.clear();
         for (int i = 0; i < K; i++) {
             colors.add(new Color(scanner.nextInt(), scanner.nextInt(), scanner.nextInt()));
         }
@@ -92,5 +124,8 @@ public class Preferences {
         isolinesColor = new Color(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
         System.out.println("Isolines color: [" + isolinesColor.getRed() + ", " + isolinesColor.getGreen() + ", " + isolinesColor.getBlue() + "]");
 
+        loadIntervals();
+        board.workingPanel.paint();
+        board.legendPanel.paint();
     }
 }
