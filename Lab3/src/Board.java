@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,6 +17,81 @@ public class Board {
     Preferences preferences = new Preferences(this);
 
 
+    private void preferences(ActionEvent e) {
+        JFrame preferencesFrame = new JFrame("Preferences");
+        preferencesFrame.setLayout(null);
+        preferencesFrame.setLocationRelativeTo(null);
+        preferencesFrame.setSize(300, 300);
+
+        JLabel aLabel = new JLabel("a:");
+        aLabel.setBounds(25, 10, 80, 40);
+        JLabel bLabel = new JLabel("b:");
+        bLabel.setBounds(25, 50, 80, 40);
+        JLabel cLabel = new JLabel("c:");
+        cLabel.setBounds(25, 90, 80, 40);
+        JLabel dLabel = new JLabel("d:");
+        dLabel.setBounds(25, 130, 80, 40);
+
+        JTextField aField = new JTextField();
+        aField.setBounds(50, 10, 80, 40);
+        aField.setText(String.valueOf(preferences.a));
+        JTextField bField = new JTextField();
+        bField.setBounds(50, 50, 80, 40);
+        bField.setText(String.valueOf(preferences.b));
+        JTextField cField = new JTextField();
+        cField.setBounds(50, 90, 80, 40);
+        cField.setText(String.valueOf(preferences.c));
+        JTextField dField = new JTextField();
+        dField.setBounds(50, 130, 80, 40);
+        dField.setText(String.valueOf(preferences.d));
+
+        JLabel gridLabel = new JLabel("Grid");
+        gridLabel.setBounds(25, 170, 80, 40);
+
+        JTextField firstGrid = new JTextField();
+        firstGrid.setBounds(60, 170, 80, 40);
+        firstGrid.setText(String.valueOf(preferences.N));
+
+        JLabel xLabel = new JLabel("x");
+        xLabel.setBounds(143, 170, 10, 40);
+
+        JTextField secondGrid = new JTextField();
+        secondGrid.setBounds(150, 170, 80, 40);
+        secondGrid.setText(String.valueOf(preferences.M));
+
+        JButton saveButton = new JButton("Save");
+        saveButton.setBounds(100, 220, 75, 50);
+
+        saveButton.addActionListener(ee -> {
+            preferences.a = Integer.parseInt(aField.getText());
+            preferences.b = Integer.parseInt(bField.getText());
+            preferences.c = Integer.parseInt(cField.getText());
+            preferences.d = Integer.parseInt(dField.getText());
+
+            preferences.N = Integer.parseInt(firstGrid.getText());
+            preferences.M = Integer.parseInt(secondGrid.getText());
+        });
+
+        preferencesFrame.add(aLabel);
+        preferencesFrame.add(bLabel);
+        preferencesFrame.add(cLabel);
+        preferencesFrame.add(dLabel);
+
+        preferencesFrame.add(aField);
+        preferencesFrame.add(bField);
+        preferencesFrame.add(cField);
+        preferencesFrame.add(dField);
+
+        preferencesFrame.add(gridLabel);
+        preferencesFrame.add(firstGrid);
+        preferencesFrame.add(xLabel);
+        preferencesFrame.add(secondGrid);
+
+        preferencesFrame.add(saveButton);
+
+        preferencesFrame.setVisible(true);
+    }
+
     public Board() {
         frame = new JFrame("ICG Map");
 //        try {
@@ -30,6 +107,51 @@ public class Board {
         menuBar.add(createFileMenu());
         menuBar.add(createAboutMenu());
 
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+
+        JCheckBox gridCheckBox = new JCheckBox("Grid");
+        gridCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == 1) {
+                    workingPanel.gridMode = true;
+                    workingPanel.paint();
+                } else {
+                    workingPanel.gridMode = false;
+                    workingPanel.paint();
+                }
+            }
+        });
+        toolBar.add(gridCheckBox);
+
+        JCheckBox gradientCheckBox = new JCheckBox("Gradient");
+        gradientCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == 1) {
+                    legendPanel.gradientMode = true;
+                    legendPanel.paint();
+                    workingPanel.gradientMode = true;
+                    workingPanel.paint();
+                } else {
+                    legendPanel.gradientMode = false;
+                    legendPanel.paint();
+                    workingPanel.gradientMode = false;
+                    workingPanel.paint();
+                }
+            }
+        });
+        toolBar.add(gradientCheckBox);
+
+        toolBar.addSeparator();
+
+        JButton preferencesButton = new JButton("Preferences");
+        preferencesButton.addActionListener(this::preferences);
+        toolBar.add(preferencesButton);
+
+        frame.add(toolBar, BorderLayout.NORTH);
+
         JPanel panel = new JPanel();
         panel.setLayout(null);
         //frame.setLayout(null);
@@ -37,7 +159,7 @@ public class Board {
         final double[] xKoef = {(preferences.b - preferences.a) / (double) preferences.boardWidth};
         final double[] yKoef = {(preferences.d - preferences.c) / (double) preferences.boardHeight};
 
-        workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0]);
+        workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0], this);
         workingPanel.setPreferredSize(new Dimension((int)preferences.boardWidth, (int)preferences.boardWidth));
         //JScrollPane scrollPane = new JScrollPane(workingPanel);
         //scrollPane.setBorder(BorderFactory.createDashedBorder(null, 1.5f, 5, 4, false));
@@ -50,8 +172,8 @@ public class Board {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-//                xKoef[0] = (preferences.b - preferences.a) / (double) preferences.boardWidth;
-//                yKoef[0] = (preferences.d - preferences.c) / (double) preferences.boardHeight;
+                //resizeX = frame
+                //resizeY = (preferences.d - preferences.c) / (double) preferences.boardHeight;
 //                workingPanel.setXKoef(xKoef[0]);
 //                workingPanel.setYKoef(yKoef[0]);
                 //scrollPane.setBounds(4, 4, panel.getWidth() - 10, panel.getHeight() - 10);

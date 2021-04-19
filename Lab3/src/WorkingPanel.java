@@ -14,6 +14,7 @@ public class WorkingPanel extends JPanel {
     Graphics2D graphics2D;
     Graphics2D showGraphics2D;
     Preferences preferences;
+    Board board1;
     Core core;
     boolean dynamic;
     double[] grid;
@@ -21,6 +22,9 @@ public class WorkingPanel extends JPanel {
     AffineTransformOp AffineTransformOp;
 
     double mouseValue = 0.0;
+
+    boolean gridMode = false;
+    boolean gradientMode = false;
 
     double xKoef;
     double yKoef;
@@ -71,8 +75,9 @@ public class WorkingPanel extends JPanel {
 
     }
 
-    public WorkingPanel(JFrame board, Preferences preferences, double xKoef, double yKoef) {
+    public WorkingPanel(JFrame board, Preferences preferences, double xKoef, double yKoef, Board board1) {
         this.board = board;
+        this.board1 = board1;
         this.preferences = preferences;
         this.xKoef = xKoef;
         this.yKoef = yKoef;
@@ -86,23 +91,6 @@ public class WorkingPanel extends JPanel {
         graphics2D.setBackground(Color.white);
         graphics2D.clearRect(0, 0, 600, 400);
         grid = core.calcGridPoints();
-
-
-//        core.lines(-1, Color.BLACK);
-//        core.lines(-0.75, Color.BLACK);
-//        core.lines(-0.5, Color.BLACK);
-//        core.lines(-0.25, Color.BLACK);
-//        core.lines(0.25, Color.BLACK);
-//        core.lines(0.5, Color.BLACK);
-//        core.lines(0.75, Color.BLACK);
-//        core.span(-1, -0.75, Color.GRAY, image);
-//        core.span(-0.75, -0.5, Color.red, image);
-//        core.span(-0.5, -0.25, Color.orange, image);
-//        core.span(-0.25, 0, Color.yellow, image);
-//        core.span(0, 0.25, Color.cyan, image);
-//        core.span(0.25, 0.5, Color.green, image);
-//        core.span(0.5, 0.75, Color.blue, image);
-//        core.span(0.75, 1, Color.PINK, image);
 
         repaint();
         setFocusable(true);
@@ -119,7 +107,12 @@ public class WorkingPanel extends JPanel {
         }
         showImage = copyImage(image);
         showGraphics2D = (Graphics2D) showImage.getGraphics();
-        drawGrid();
+        if (gridMode) {
+            drawGrid();
+        }
+        if (gradientMode) {
+            turnGradient();
+        }
         repaint();
     }
 
@@ -144,5 +137,33 @@ public class WorkingPanel extends JPanel {
             showGraphics2D.drawLine(0, (int)(interval * i), preferences.boardWidth, (int)(interval * i));
         }
 
+    }
+
+    public void turnGradient() {
+        var intervalX = preferences.boardWidth / (double) preferences.N;
+        var intervalY = preferences.boardHeight / (double) preferences.M;
+
+        for (int x = 0; x < preferences.boardWidth; x++) {
+            for (int y = 0; y < preferences.boardHeight; y++){
+                double xNormalCoord = (x / intervalX);
+                double yNormalCoord = (y / intervalY);
+
+                double dotCoordX = xNormalCoord % 1;
+                double dotCoordY = yNormalCoord % 1;
+
+                var upLeftValue = grid[(int) yNormalCoord * preferences.N + (int) xNormalCoord];
+                var downLeftValue = grid[((int) yNormalCoord + 1) * preferences.N + (int) xNormalCoord];
+                var upRightValue = grid[(int) yNormalCoord * preferences.N + (int) xNormalCoord + 1];
+                var downRightValue = grid[((int) yNormalCoord + 1) * preferences.N + 1 + (int) xNormalCoord];
+
+                var R1 = (upRightValue - upLeftValue) * dotCoordX + upLeftValue;
+                var R2 = (downRightValue - downLeftValue) * dotCoordX + downLeftValue;
+                var pointValue = (R2 - R1) * dotCoordY + R1;
+
+                var legendValue = 600 * LinInterploation.linInterpolation(preferences.min, preferences.max, pointValue);
+
+                showImage.setRGB(x, y, board1.legendPanel.legendImage.getRGB((int) legendValue, 5));
+            }
+        }
     }
 }

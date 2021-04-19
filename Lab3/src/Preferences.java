@@ -34,15 +34,22 @@ public class Preferences {
 
     Board board;
 
+    double min;
+    double max;
+
     public Preferences(Board board) {
         this.board = board;
         colors.add(Color.red);
         colors.add(Color.orange);
         colors.add(Color.yellow);
         isolinesColor = Color.BLACK;
+        prepareValues();
 
-        var min =  Double.MAX_VALUE;
-        var max = Double.MIN_VALUE;
+    }
+
+    public void prepareValues() {
+        min =  Double.MAX_VALUE;
+        max = Double.MIN_VALUE;
 
         for (int x = 0; x < boardWidth; x++) {
             for (int y = 0; y < boardHeight; y++) {
@@ -65,12 +72,11 @@ public class Preferences {
         for (var interva: intervals) {
             System.out.println(interva);
         }
-
     }
 
     public void loadIntervals() {
-        var min =  Double.MAX_VALUE;
-        var max = Double.MIN_VALUE;
+        min =  Double.MAX_VALUE;
+        max = Double.MIN_VALUE;
 
         for (double x = a; x < b; x+=0.001) {
             for (double y = c; y < d; y+=0.001) {
