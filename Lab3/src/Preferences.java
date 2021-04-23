@@ -22,7 +22,7 @@ public class Preferences {
     public int M = 8;
 
     //number of isolines
-    public int K = 3;
+    public int K = 2;
 
     //colors array
     ArrayList<Color> colors = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Preferences {
         colors.add(Color.yellow);
         isolinesColor = Color.BLACK;
         prepareValues();
-
+        loadIntervals();
     }
 
     public void prepareValues() {
@@ -64,7 +64,7 @@ public class Preferences {
         }
         intervals.add(min);
         var interval = (max - min) / K;
-        for (int i = 1; i < K; i++) {
+        for (int i = 1; i <= K; i++) {
             intervals.add((double) (min + (interval * i)));
         }
         intervals.add(max);
@@ -130,7 +130,9 @@ public class Preferences {
         isolinesColor = new Color(scanner.nextInt(), scanner.nextInt(), scanner.nextInt());
         System.out.println("Isolines color: [" + isolinesColor.getRed() + ", " + isolinesColor.getGreen() + ", " + isolinesColor.getBlue() + "]");
 
+        prepareValues();
         loadIntervals();
+        board.workingPanel.reGrid();
         board.workingPanel.paint();
         board.legendPanel.paint();
     }

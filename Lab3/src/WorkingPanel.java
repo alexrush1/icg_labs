@@ -32,6 +32,11 @@ public class WorkingPanel extends JPanel {
     public void setXKoef(double value) { xKoef = value; }
     public void setYKoef(double value) { yKoef = value; }
 
+    public void reCoef() {
+        xKoef = (preferences.b - preferences.a) / (double) preferences.boardWidth;
+        yKoef = (preferences.d - preferences.c) / (double) preferences.boardHeight;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
 
@@ -43,6 +48,9 @@ public class WorkingPanel extends JPanel {
 //                (board.getWidth() - 57) / (double) preferences.boardWidth,
 //                (board.getHeight() - 180) / (double) preferences.boardHeight
 //        ), AffineTransformOp.TYPE_BILINEAR);
+
+        graphics.setBackground(Color.white);
+        graphics.fillRect(0, 0, 600, 400);
 
         graphics.drawImage(showImage, AffineTransformOp, 0, 0);
 
@@ -97,13 +105,19 @@ public class WorkingPanel extends JPanel {
         //setVisible(true);
     }
 
+    public void reGrid() {
+        grid = core.calcGridPoints();
+    }
+
     public void paint() {
+
         for (int i = 0; i <= preferences.K; i++) {
             core.lines(preferences.intervals.get(i), preferences.isolinesColor);
             System.out.println("Line value - " + preferences.intervals.get(i));
         }
-        for (int i = 0; i < preferences.K; i++) {
+        for (int i = 0; i <= preferences.K; i++) {
             core.span(preferences.intervals.get(i), preferences.intervals.get(i + 1), preferences.colors.get(i), image);
+            System.out.println("interval: " + preferences.intervals.get(i) + " , " + preferences.intervals.get(i + 1));
         }
         showImage = copyImage(image);
         showGraphics2D = (Graphics2D) showImage.getGraphics();
@@ -150,6 +164,8 @@ public class WorkingPanel extends JPanel {
 
                 double dotCoordX = xNormalCoord % 1;
                 double dotCoordY = yNormalCoord % 1;
+
+                //System.out.println(xNormalCoord + "  " + yNormalCoord);
 
                 var upLeftValue = grid[(int) yNormalCoord * preferences.N + (int) xNormalCoord];
                 var downLeftValue = grid[((int) yNormalCoord + 1) * preferences.N + (int) xNormalCoord];

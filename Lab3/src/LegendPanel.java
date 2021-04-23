@@ -95,7 +95,7 @@ public class LegendPanel extends JPanel {
         colorChooserFrame.setSize(600, 400);
         JButton chooseButton = new JButton("Choose color");
         System.out.println("click!");
-        var interval = legendImage.getWidth() / preferences.K;
+        var interval = legendImage.getWidth() / (preferences.K + 1);
         int colorNumber = mouseX / interval;
 
         newColor = Color.WHITE;
@@ -140,20 +140,25 @@ public class LegendPanel extends JPanel {
     }
 
     public void turnGradient() {
-        var interval = legendImage.getWidth() / (preferences.K - 1);
+        var interval = legendImage.getWidth() / (preferences.K);
         BufferedImage newImage = new BufferedImage(600, 60, BufferedImage.TYPE_INT_RGB);
         System.out.println(interval);
         int r1, r2, g1, g2, b1, b2;
         r1 = legendImage.getRGB(1, 5)>>16&0xFF;
         g1 = legendImage.getRGB(1, 5)>>8&0xFF;
         b1 = legendImage.getRGB(1, 5)&0xFF;
-        for (int x = 0; x < preferences.K - 1; x++) {
-            r2 = legendImage.getRGB((interval * (x + 1)) - 1, 5)>>16&0xFF;
-            g2 = legendImage.getRGB((interval * (x + 1)) - 1, 5)>>8&0xFF;
-            b2 = legendImage.getRGB((interval * (x + 1)) - 1, 5)&0xFF;
-
-
-            System.out.println((interval * x + 1) + "  " + ((interval * (x + 1)) - 1));
+        int current = 0;
+        for (int x = 0; x < preferences.K; x++) {
+            System.out.print(current);
+            if (x == preferences.K - 1) {
+                current = legendImage.getWidth() - 1;
+            } else {
+                current = (((int) interval * (x + 1)) - 1);
+            }
+            r2 = legendImage.getRGB(current, 5)>>16&0xFF;
+            g2 = legendImage.getRGB(current, 5)>>8&0xFF;
+            b2 = legendImage.getRGB(current, 5)&0xFF;
+            System.out.println("  " + current);
 
             for (int i = interval * x; i < interval * (x + 1); i++) {
                 double perc = (i % interval) / (double)interval;

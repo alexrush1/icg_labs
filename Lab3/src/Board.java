@@ -63,13 +63,20 @@ public class Board {
         saveButton.setBounds(100, 220, 75, 50);
 
         saveButton.addActionListener(ee -> {
-            preferences.a = Integer.parseInt(aField.getText());
-            preferences.b = Integer.parseInt(bField.getText());
-            preferences.c = Integer.parseInt(cField.getText());
-            preferences.d = Integer.parseInt(dField.getText());
+            preferences.a = (float) Double.parseDouble(aField.getText());
+            preferences.b = (float) Double.parseDouble(bField.getText());
+            preferences.c = (float) Double.parseDouble(cField.getText());
+            preferences.d = (float) Double.parseDouble(dField.getText());
 
             preferences.N = Integer.parseInt(firstGrid.getText());
             preferences.M = Integer.parseInt(secondGrid.getText());
+
+            reCoef();
+            workingPanel.reCoef();
+            preferences.prepareValues();
+            preferences.loadIntervals();
+            workingPanel.reGrid();
+            workingPanel.paint();
         });
 
         preferencesFrame.add(aLabel);
@@ -90,6 +97,14 @@ public class Board {
         preferencesFrame.add(saveButton);
 
         preferencesFrame.setVisible(true);
+    }
+
+    double[] xKoef = {(preferences.b - preferences.a) / (double) preferences.boardWidth};
+    double[] yKoef = {(preferences.d - preferences.c) / (double) preferences.boardHeight};
+
+    public void reCoef() {
+        xKoef = new double[]{(preferences.b - preferences.a) / (double) preferences.boardWidth};
+        yKoef = new double[]{(preferences.d - preferences.c) / (double) preferences.boardHeight};
     }
 
     public Board() {
@@ -156,8 +171,8 @@ public class Board {
         panel.setLayout(null);
         //frame.setLayout(null);
 
-        final double[] xKoef = {(preferences.b - preferences.a) / (double) preferences.boardWidth};
-        final double[] yKoef = {(preferences.d - preferences.c) / (double) preferences.boardHeight};
+        xKoef = new double[]{(preferences.b - preferences.a) / (double) preferences.boardWidth};
+        yKoef = new double[]{(preferences.d - preferences.c) / (double) preferences.boardHeight};
 
         workingPanel = new WorkingPanel(frame, preferences, xKoef[0], yKoef[0], this);
         workingPanel.setPreferredSize(new Dimension((int)preferences.boardWidth, (int)preferences.boardWidth));
