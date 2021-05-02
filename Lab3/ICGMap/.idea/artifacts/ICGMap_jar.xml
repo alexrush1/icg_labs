@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ICGMap:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ICGMap_jar</output-path>
+    <root id="archive" name="ICGMap.jar">
+      <element id="module-output" name="ICGMap" />
+    </root>
+  </artifact>
+</component>
